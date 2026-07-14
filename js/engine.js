@@ -23,7 +23,7 @@ function defP(){ return {
   runs:0, solved:{}, outcomes:{}, endings:{}, metaEndings:{},
   head:0, heart:0, watson:6, norburys:0, moriarty:0,
   monographs:{}, commonplace:{}, margins:{}, moriartyBeats:{}, lastCase:null, lastVerdict:null,
-  finalDone:false, beeSeen:false }; }
+  finalDone:false, beeSeen:false, hard:false }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p) return Object.assign(defP(),p); }catch(e){}
   return defP(); }
@@ -34,7 +34,7 @@ let P=loadP();
 function newRun(caseId){ const c=CASES[caseId];
   return { caseId, scene:c.start, index:{obs:{},inf:{}}, seen:{},
     head:0, heart:0, ennui:0, ennuiOffered:false, needle:false,
-    watsonUsed:false, watsonAsks:0, irregulars:c.irregulars||2,
+    watsonUsed:false, watsonAsks:0, irregulars:Math.max(1,(c.irregulars||2)-(P.hard?1:0)),
     norburys:0, flags:{}, stirred:false }; }
 let S=null;
 function saveRun(){ if(S) localStorage.setItem(K_R, JSON.stringify(S)); }
@@ -86,7 +86,18 @@ function titleScreen(){
     el.innerHTML=bits.join('');
   }
   renderCaseList();
+  renderHardToggle();
 }
+/* THE COLD METHOD — a no-hints difficulty toggle for the seasoned player */
+function renderHardToggle(){
+  const b=$('hard-toggle'); if(!b) return;
+  b.innerHTML = P.hard
+    ? `<span class="ht-name">✦ The Cold Method</span><span class="ht-sub">no certainty · no Watson · no quarter</span>`
+    : `<span class="ht-name">The Guided Method</span><span class="ht-sub">certainty shown · Watson at your elbow</span>`;
+  b.classList.toggle('on', !!P.hard);
+  b.setAttribute('aria-pressed', P.hard?'true':'false');
+}
+$('hard-toggle')&&($('hard-toggle').onclick=()=>{ P.hard=!P.hard; saveP(); renderHardToggle(); AUDIO.tick&&AUDIO.tick(); });
 /* an illustrative plate for each case-card, reusing the scene stills */
 const PLATE={ study:'crimescene', speckled:'manor', league:'cellar', carbuncle:'alley',
   silverblaze:'station', bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
@@ -163,8 +174,9 @@ function certainty(){ /* coverage of the case's VALID reasoning, 0..1 */
 }
 function paintHUD(){
   const c=CUR();
+  const hard=!!P.hard;
   const cer=certainty(), pct=Math.round(cer*100);
-  const R=15, C=2*Math.PI*R, off=C*(1-cer);
+  const R=15, C=2*Math.PI*R, off=hard?C:C*(1-cer);
   /* head/heart marker: hh = head-heart; HEAD is the left end, so a headward
      lean must sit LEFT (low %). */
   const hh=clamp(S.head+P.head - (S.heart+P.heart), -6,6);
@@ -174,10 +186,10 @@ function paintHUD(){
   let h=`<div class="hud-panel" role="group" aria-label="The instruments">
     <div class="hud-case"><span class="hc-title">${c.title}</span><span class="hc-year">${c.year}</span></div>
     <div class="hud-sep"></div>
-    <div class="ring-wrap" role="img" aria-label="Certainty ${pct} percent — how coherent your Index is; whether it is true, you learn only at the verdict" title="CERTAINTY — how complete and coherent your Index is. Whether it is TRUE, you learn only when you conclude.">
+    <div class="ring-wrap${hard?' cold':''}" role="img" aria-label="${hard?'The Cold Method — certainty is withheld':'Certainty '+pct+' percent — how coherent your Index is; whether it is true, you learn only at the verdict'}" title="${hard?'THE COLD METHOD — certainty is withheld. Trust your own eye.':'CERTAINTY — how complete and coherent your Index is. Whether it is TRUE, you learn only when you conclude.'}">
       <svg viewBox="0 0 40 40" class="cer-ring" aria-hidden="true"><circle cx="20" cy="20" r="${R}" class="cr-bg"/>
       <circle cx="20" cy="20" r="${R}" class="cr-fg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>
-      <div class="ring-num">${pct}<span>%</span></div><div class="ring-lab">certainty</div>
+      <div class="ring-num">${hard?'<span class="ring-dash">—</span>':pct+'<span>%</span>'}</div><div class="ring-lab">${hard?'cold method':'certainty'}</div>
     </div>
     <div class="hud-sep"></div>
     <div class="hh-row" role="img" aria-label="Head and Heart: ${hhLabel}" title="HEAD ↔ HEART. Solving for the puzzle pulls one way; solving for the people, the other. Neither is virtue. Watson is watching which.">
@@ -277,8 +289,8 @@ function renderScene(fresh){
     const note = (typeof marginFor==='function') ? marginFor(S.caseId,(P.outcomes[S.caseId]&&P.outcomes[S.caseId].kind)||'solved-true') : null;
     if(note){ if(!P.margins) P.margins={}; P.margins[S.caseId]=1; saveP(); setTimeout(()=>showMargin(note),700); }
   }
-  /* tutorial: nudge toward the Index the first moment a thread can be drawn (first play only) */
-  if(c.tutorial && !P.solved[S.caseId] && !S.flags.coach_connect && offerable().length>0 && $('method-ov').classList.contains('hidden')){
+  /* tutorial: nudge toward the Index the first moment a thread can be drawn (first play, guided only) */
+  if(c.tutorial && !P.hard && !P.solved[S.caseId] && !S.flags.coach_connect && offerable().length>0 && $('method-ov').classList.contains('hidden')){
     S.flags.coach_connect=1;
     setTimeout(()=>coachTip('a first connection','Two of your clues fit together. Tap <b>🧵 The Index</b> below, then draw the red thread between them. Mind — some connections are false, and I shan’t warn you which.'),450);
   }
@@ -337,25 +349,28 @@ function newInferencesAvailable(){ return offerable().length>0; }
  * ==================================================================== */
 function updateBottomBar(){
   const bar=$('bottom-bar');
+  const hard=!!P.hard;
   const nobs=noticedCount(), off=offerable().length;
-  const ready=off>0;
+  const ready=off>0 && !hard; /* in the Cold Method you must spot the connections yourself */
   const c=CUR();
   const np=c.newspaper;
   let newsBtn='';
   if(np){ const broken=np.predictions.filter(p=>S.index.inf[p.disruptedBy]).length, total=np.predictions.length;
     newsBtn=`<button id="bb-news" class="bb-btn news${broken===total?' allbroke':''}">
       <span class="bb-ic">📰</span> Tomorrow <span class="bb-n">${broken}/${total}</span></button>`; }
+  const watsonBtn = hard ? '' :
+    `<button id="bb-watson" class="bb-btn ghost"${S.watsonAsks>=2?' disabled':''}>
+      <span class="bb-ic">✎</span> Ask Watson${S.watsonAsks>=2?' — enough':''}</button>`;
   bar.innerHTML=`
     <button id="bb-index" class="bb-btn${ready?' stir':''}">
       <span class="bb-ic">🧵</span> The Index <span class="bb-n">${nobs}</span>
       ${ready?`<span class="bb-badge">${off} to connect</span>`:''}</button>
     ${newsBtn}
-    <button id="bb-watson" class="bb-btn ghost"${S.watsonAsks>=2?' disabled':''}>
-      <span class="bb-ic">✎</span> Ask Watson${S.watsonAsks>=2?' — enough':''}</button>
+    ${watsonBtn}
     <button id="bb-conclude" class="bb-btn conclude"><span class="bb-ic">⚖</span> Conclude</button>`;
   $('bb-index').onclick=openIndex;
   $('bb-conclude').onclick=openConclude;
-  $('bb-watson').onclick=askWatson;
+  if($('bb-watson')) $('bb-watson').onclick=askWatson;
   if($('bb-news')) $('bb-news').onclick=openNews;
 }
 
@@ -445,7 +460,9 @@ function renderBoard(){
   tray.innerHTML=th;
   [...tray.querySelectorAll('.tray-thread')].forEach(b=>b.onclick=()=>acceptInference(b.dataset.inf));
   /* certainty read-out on the board too */
-  $('board-cer').innerHTML=`<b>${Math.round(certainty()*100)}%</b> certain — <i>whether it is <u>true</u>, only concluding will tell.</i>`;
+  $('board-cer').innerHTML=P.hard
+    ? `<i>The Cold Method — <u>certainty is withheld</u>. Read your own board.</i>`
+    : `<b>${Math.round(certainty()*100)}%</b> certain — <i>whether it is <u>true</u>, only concluding will tell.</i>`;
   requestAnimationFrame(()=>drawThreads());
 }
 
@@ -462,7 +479,7 @@ function acceptInference(id){
   setTimeout(()=>{ const k=$('board-knots').querySelector(`[data-inf="${id}"]`);
     if(k) k.classList.add('knot-new'); drawThreads(); },60);
   maybeEditionChanged(id);
-  if(c.tutorial && !S.flags.coach_conclude && !c.newspaper){ S.flags.coach_conclude=1;
+  if(c.tutorial && !P.hard && !S.flags.coach_conclude && !c.newspaper){ S.flags.coach_conclude=1;
     setTimeout(()=>coachTip('when the board is ready','A thread drawn. Build enough of them and the true accusation becomes thinkable — a weak board simply cannot see it. Then press <b>⚖ Conclude</b>. Be certain: naming the guilty cannot be undone.'),760); }
 }
 /* drawing a key thread can break one of the Tomorrow Edition's predictions */
@@ -525,7 +542,7 @@ window.addEventListener('resize',()=>{ if(!$('index-ov').classList.contains('hid
  *  WATSON — the nudge (costs a little pride)                             *
  * ==================================================================== */
 function askWatson(){
-  if(S.watsonAsks>=2) return;
+  if(P.hard || S.watsonAsks>=2) return;
   S.watsonAsks++; S.watsonUsed=true;
   S.head=Math.max(0,S.head); /* asking is humbling, not cold — small Heart lean */
   S.heart+=0;
@@ -589,7 +606,7 @@ function coachTip(tag, body){
  * ==================================================================== */
 function maybeEnnui(firstVisit, availCount){
   /* a scene that shows nothing new, and no thread to draw, is idleness */
-  if(!firstVisit && availCount===0 && offerable().length===0){ S.ennui=clamp(S.ennui+1,0,META.ennuiMax); paintHUD(); }
+  if(!firstVisit && availCount===0 && offerable().length===0){ S.ennui=clamp(S.ennui+(P.hard?2:1),0,META.ennuiMax); paintHUD(); }
   if(S.ennui>=META.ennuiMax && !S.ennuiOffered){ S.ennuiOffered=true; offerNeedle(); }
 }
 function offerNeedle(){
@@ -617,7 +634,7 @@ function openConclude(){
   /* always include the decline option even if listed */
   let h=`<div class="cc-head"><h2>Name it — or don’t</h2>
     <p class="cc-sub">You may only accuse what your Index will carry. A conclusion here is not a guess you can take back: the consequences play out <em>before</em> you learn if you were right.</p>
-    <div class="cc-cer">Certainty <b>${Math.round(certainty()*100)}%</b> · Truth <b class="hidden-truth">— hidden —</b></div></div>`;
+    <div class="cc-cer">Certainty <b>${P.hard?'withheld':Math.round(certainty()*100)+'%'}</b> · Truth <b class="hidden-truth">— hidden —</b></div></div>`;
   h+=`<div class="cc-list">`;
   avail.forEach(a=>{
     const cls=a.decline?'decline':'';
@@ -685,7 +702,7 @@ function verdict(outId, acc, tone){
 
   /* monographs */
   const ctx={ caseId:S.caseId, truth:!!o.truth, kind:o.kind, tone,
-    firstNorbury, isReplay:wasSolved,
+    firstNorbury, isReplay:wasSolved, hard:!!P.hard,
     watsonUnused:!S.watsonUsed,
     fullPhysical: allPhysicalNoticed(c),
     fullChains: allValidDrawn(c),

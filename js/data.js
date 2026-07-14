@@ -115,6 +115,9 @@ const MONOGRAPHS = [
   { id:'m_negative', title:'Upon the Dog That Did Nothing',
     note:'Solve a case on the strength of what did NOT happen.',
     check:(ctx)=> ctx.caseId==='silverblaze' && ctx.truth },
+  { id:'m_cold', title:'Upon the Cold Method',
+    note:'Solve a case truly with the training wheels off — no certainty, no Watson, no coaching.',
+    check:(ctx)=> ctx.hard && ctx.truth },
 ];
 
 /* THE MARGINS — Watson revises his manuscript. On a REPLAY of a case you
