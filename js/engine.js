@@ -100,7 +100,7 @@ function renderHardToggle(){
 $('hard-toggle')&&($('hard-toggle').onclick=()=>{ P.hard=!P.hard; saveP(); renderHardToggle(); AUDIO.tick&&AUDIO.tick(); });
 /* an illustrative plate for each case-card, reusing the scene stills */
 const PLATE={ study:'crimescene', speckled:'manor', league:'cellar', carbuncle:'alley',
-  silverblaze:'station', dancing:'records', bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
+  silverblaze:'station', musgrave:'cellar', dancing:'records', bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
 function renderCaseList(){
   const box=$('case-list'); if(!box) return;
   let h='';
@@ -323,7 +323,8 @@ function notice(id, fromIrregular){
 }
 function flashObservation(o,fromIrregular,done){
   const ov=$('flash'); if(!ov){ done&&done(); return; }
-  const glyphs = (o.glyphs && typeof ART!=='undefined' && ART.dancingMen) ? `<div class="cipher-strip">${ART.dancingMen(o.glyphs)}</div>` : '';
+  const glyphs = (o.glyphs && typeof ART!=='undefined' && ART.dancingMen) ? `<div class="cipher-strip">${ART.dancingMen(o.glyphs)}</div>`
+    : (o.ritual ? ritualBlock(o.ritual) : '');
   ov.className='flash-ov'; ov.innerHTML=
     `<div class="flash-card tag-${o.tag}">
       <div class="fc-tag">${fromIrregular?'the Irregulars bring —':o.tag}</div>
@@ -423,7 +424,8 @@ function renderBoard(){
   /* observation cards, in the order noticed (stable) */
   const ids=allObsIds(c).filter(id=>S.index.obs[id]);
   board.innerHTML=ids.map((id,i)=>{ const o=obsDef(id);
-    const glyphs=(o.glyphs && ART.dancingMen)?`<div class="cipher-strip small">${ART.dancingMen(o.glyphs)}</div>`:'';
+    const glyphs=(o.glyphs && ART.dancingMen)?`<div class="cipher-strip small">${ART.dancingMen(o.glyphs)}</div>`
+      : (o.ritual ? ritualBlock(o.ritual) : '');
     return `<div class="pin-card tag-${o.tag}" data-obs="${id}">
       <span class="pc-tack"></span>
       <div class="pc-tag">${o.tag}</div>
@@ -579,6 +581,12 @@ function watsonNudge(){
       return `There is a thing on the ground we cannot reach ourselves. Send one of Wiggins’s boys — that is what they are for.`; }
   }
   return `You have more than you think. Read your own board again, slowly, as though a stranger had written it.`;
+}
+
+/* an illuminated catechism — the Musgrave Ritual, question and answer */
+function ritualBlock(pairs){
+  return `<div class="ritual-block">`+pairs.map(p=>
+    `<div class="rit-row"><span class="rit-q">${p[0]}</span><span class="rit-a">${p[1]}</span></div>`).join('')+`</div>`;
 }
 
 /* replay marginalia — Watson's revised manuscript, shown once per case entry */

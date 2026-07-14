@@ -80,6 +80,7 @@ const COMMONPLACE = {
   yellow_face:   "On the danger of the obvious — that a face at a window is a threat only to the fearful mind.",
   dog_silent:    "On the evidence of absence — the dog that does not bark, the track that is never torn: what should have happened and did not is often the loudest witness of all.",
   strip_first:   "On secret writings — I have examined a hundred and sixty separate ciphers, and there is no cryptograph a human wit can devise that another human wit cannot resolve. What one man invents, another discovers.",
+  the_ritual:    "On the survival of old rites — a custom kept long after its meaning is lost is not empty. It is a locked box whose key was thrown away, and the shape of the lock still tells you what it once held.",
 };
 
 /* Monographs — the achievement layer, in Holmes's own titles. Earned by
@@ -122,6 +123,9 @@ const MONOGRAPHS = [
   { id:'m_cipher', title:'Upon the Cryptographs, and Their Solution',
     note:'Break a secret writing, and solve the case behind it.',
     check:(ctx)=> ctx.caseId==='dancing' && ctx.truth },
+  { id:'m_ritual', title:'Upon the Reading of Old Rites',
+    note:'Read a treasure out of a rhyme three centuries deep.',
+    check:(ctx)=> ctx.caseId==='musgrave' && ctx.truth },
 ];
 
 /* THE MARGINS — Watson revises his manuscript. On a REPLAY of a case you
@@ -161,6 +165,10 @@ const MARGINS = {
     wrong:'I have not been able to finish revising this one. He would not turn and face the hunt, and the counter-index closed about him. I keep the page, and the grief, exactly as they fell.',
     solved:'Reichenbach. I have written it as it happened and struck out nothing. The Napoleon of Crime was ended — and, in the margin, one line only: that some victories are worth their terrible price, and one is not.',
     unsolved:'He turned back down the path with me and let the reckoning go. “I wanted this more,” he said, and meant the two of us, walking down. It is the bravest page in the book.' },
+  musgrave:{
+    wrong:'I have struck out the easy ending I wrote. Brunton did not run off and Rachel did not simply drown — the Ritual was a map, and it pointed straight down, and I read it too late or not at all. A king’s crown lay under my feet while I bowed my way out of the hall.',
+    solved:'We read a treasure out of a three-hundred-year rhyme, and found the butler dead in the vault it named. In the margin I have copied one line of the old catechism — “and so beneath” — for it was the truest direction I ever followed.',
+    unsolved:'We raised the crown and the poor man’s body, and I would not swear to how he died in the dark. Rachel was never hunted. Holmes said the provable half, honestly told, was worth more than a tidy lie over the rest.' },
   dancing:{
     wrong:'I have struck out the page where I misread the figures. They were never a child’s game, nor the wife’s guilt — they were a hunt, spelled out plainly, and I was too slow or too unkind to read them. A good man died within reach of the answer.',
     solved:'We answered Abe Slaney in his own capering hand, and he walked into it. In the margin I have drawn one small dancing man, and beside him written: what one man can invent, another can discover.',

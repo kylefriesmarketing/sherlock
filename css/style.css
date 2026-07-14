@@ -470,6 +470,14 @@ kbd{font-family:var(--sans);font-size:.85em;background:#171b1c;border:1px solid 
 .cipher-strip.small{margin:6px 0 3px;padding:4px 2px}
 .cipher-strip.small .dm-svg{height:24px}
 .pin-card .cipher-strip{border-color:rgba(120,95,55,.4)}
+/* THE MUSGRAVE RITUAL — an illuminated catechism */
+.ritual-block{margin:9px 0 5px;padding:10px 13px;border-left:2px solid #8a5a2a;
+  background:rgba(150,112,52,.09);border-radius:0 4px 4px 0}
+.rit-row{margin-bottom:7px}
+.rit-row:last-child{margin-bottom:0}
+.rit-q{display:block;font-family:var(--sans);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:#8a5a2a;font-weight:700}
+.rit-a{display:block;font-family:var(--serif);font-style:italic;font-size:13.5px;line-height:1.4;color:#2f343a;padding-left:11px;margin-top:1px}
+.pin-card .ritual-block{background:rgba(150,112,52,.12)}
 .dm-inline{display:inline-block;vertical-align:middle;margin:0 2px;max-width:100%;overflow-x:auto}
 .dm-inline .dm-svg{display:inline-block;height:30px;width:auto}
 #verdict-text .dm-inline{display:block;margin:12px auto;text-align:center}

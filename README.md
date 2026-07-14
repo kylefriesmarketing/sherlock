@@ -51,11 +51,15 @@ Norbury), and **honest-unsolved** (declining to accuse is sometimes the correct,
 
 ## The anthology
 
-Ten cases — nine adapted from canon, one wholly original — escalating:
+Eleven cases — ten adapted from canon, one wholly original — escalating:
 
 1. **A Study in Scarlet** — the tutorial. *You have been in Afghanistan, I perceive.*
 2. **The Speckled Band** — the locked-room showpiece.
-3. **The Red-Headed League** — the obvious is the trap.
+3. **The Musgrave Ritual** — the riddle case. An ancient family catechism — rendered as an
+   illuminated question-and-answer — turns out to be a treasure-map three centuries deep. The
+   deduction is spatial: reckon a felled elm's shadow, pace the ritual's steps, and the trail ends
+   beneath a cellar flagstone, over a butler's body and a lost king's crown.
+4. **The Red-Headed League** — the obvious is the trap.
 4. **The Blue Carbuncle** — the Head/Heart showcase: the correct solve and the just outcome diverge.
 5. **Silver Blaze** — *the dog that did nothing in the night-time.* Introduces **negative evidence**:
    the clue is the bark that never came, the gallop-track never torn. The murderer, it turns out, is
