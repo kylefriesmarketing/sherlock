@@ -712,6 +712,8 @@ function verdict(outId, acc, tone){
   md.innerHTML=newMonos.map(m=>`<span class="mono-chip" title="${m.note.replace(/"/g,'&quot;')}">✦ ${m.title}</span>`).join('');
   const wm=$('verdict-watson');
   wm.textContent=watsonAside(o);
+  lastShare=shareLine(o);
+  $('btn-verdict-share').textContent='⎘ Tell the Tale';
   if(newMonos.length) setTimeout(()=>AUDIO.verdict('mono'),800);
 
   /* the Final Problem unlock nudge */
@@ -740,6 +742,8 @@ function showBeekeeper(){
   $('verdict-truth').innerHTML=`<span class="tr-true">✓ At peace.</span> Watson whole, Head and Heart in balance, and your Norburys owned.`;
   $('verdict-text').innerHTML=e.line+"\n\nThe violin, put away so long, comes out one evening on the Downs and finds — at last — its resolving chord. Below the garden the hives hum. There is nothing left to deduce, and for the first time that is not a torment. It is the quiet you never believed you were owed.";
   $('verdict-verse').textContent='the observer, who studied the gallows, studies the hive instead — and rests';
+  lastShare=`I brought the great detective to the only peace he was ever granted — retirement to the Sussex Downs, to keep bees. ★ The Beekeeper of Sussex, the secret ending.\n\nELEMENTARY — a Sherlock Holmes deduction game:\n${SHARE_URL}`;
+  $('btn-verdict-share').textContent='⎘ Tell the Tale';
   setTimeout(()=>AUDIO.verdict('solved-true',true),300);
 }
 function certaintyAt(){ return Math.round(certainty()*100); }
@@ -773,6 +777,28 @@ function resolveMeta(o, tone){
   return metaId;
 }
 
+/* ---- share the verdict — the shelf's "Tell the Tale" ---- */
+const SHARE_URL='https://kylefriesmarketing.github.io/sherlock/';
+function shareLine(o){ const t=o.title;
+  const lead={
+    'wrong-arrest':`I named the wrong soul in “${t}.” An innocent hangs — and Watson whispered a single word in my ear: Norbury.`,
+    'solved-true':`I solved “${t}” — the red thread pulled clean, and true.`,
+    'solved-cruel':`I solved “${t}” — correct, and cold. Watson said nothing at all.`,
+    'let-go':`I closed “${t}” with mercy over the law — the just answer and the legal one are not always the same door.`,
+    'unsolved-honest':`I declined to accuse in “${t}.” Some nights the whole victory is that no one else was harmed.`
+  }[o.kind] || `I closed the case of “${t}.”`;
+  return `${lead}\n\nELEMENTARY — a Sherlock Holmes deduction game where being wrong is a branch, not a retry:\n${SHARE_URL}`;
+}
+let lastShare='';
+(function(){ const sh=$('btn-verdict-share'); if(!sh) return;
+  sh.onclick=async()=>{ if(!lastShare) return;
+    try{
+      if(navigator.share){ await navigator.share({title:'ELEMENTARY — the science of deduction', text:lastShare}); }
+      else { await navigator.clipboard.writeText(lastShare); sh.textContent='Copied for the Strand ✓';
+        setTimeout(()=>{ sh.textContent='⎘ Tell the Tale'; },2200); }
+    }catch(e){ /* user dismissed the share sheet */ }
+  };
+})();
 $('btn-verdict-again').onclick=()=>{ titleScreen(); };
 $('btn-verdict-index')&&($('btn-verdict-index').onclick=()=>{ /* review board post-mortem */ });
 
