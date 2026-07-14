@@ -22,7 +22,7 @@ ORDER.sort((a,b)=>CASES[a]._seq-CASES[b]._seq);
 function defP(){ return {
   runs:0, solved:{}, outcomes:{}, endings:{}, metaEndings:{},
   head:0, heart:0, watson:6, norburys:0, moriarty:0,
-  monographs:{}, commonplace:{}, margins:{}, lastCase:null, lastVerdict:null,
+  monographs:{}, commonplace:{}, margins:{}, moriartyBeats:{}, lastCase:null, lastVerdict:null,
   finalDone:false, beeSeen:false }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p) return Object.assign(defP(),p); }catch(e){}
@@ -799,7 +799,26 @@ let lastShare='';
     }catch(e){ /* user dismissed the share sheet */ }
   };
 })();
-$('btn-verdict-again').onclick=()=>{ titleScreen(); };
+/* ---- the Moriarty thread: cold interludes as the counter-index fills ---- */
+function moriartyBeat(){
+  if(P.finalDone || typeof MORIARTY_BEATS==='undefined') return null;
+  let found=null;
+  MORIARTY_BEATS.forEach(b=>{ if(P.moriarty>=b.at && !P.moriartyBeats[b.at]) found=b; });
+  return found; /* the highest unseen beat you've earned */
+}
+function checkMoriarty(){
+  const b=moriartyBeat(); if(!b) return;
+  MORIARTY_BEATS.forEach(x=>{ if(x.at<=b.at) P.moriartyBeats[x.at]=1; }); /* supersede lower */
+  saveP();
+  const loud = b.loud && P.norburys>=2;
+  const ov=$('moriarty-ov'); ov.classList.remove('hidden');
+  ov.querySelector('.mor-title').textContent=b.title;
+  ov.querySelector('.mor-text').textContent=loud?b.loud:b.text;
+  dlgOpen('.moriarty-card');
+  if(AUDIO.dread) AUDIO.dread();
+}
+$('moriarty-close')&&($('moriarty-close').onclick=()=>{ $('moriarty-ov').classList.add('hidden'); dlgRestore(); });
+$('btn-verdict-again').onclick=()=>{ titleScreen(); checkMoriarty(); };
 $('btn-verdict-index')&&($('btn-verdict-index').onclick=()=>{ /* review board post-mortem */ });
 
 /* ==================================================================== *
@@ -854,7 +873,7 @@ $('btn-commonplace').onclick=()=>{
  *  DEBUG (~) + MUTE (m) + keys                                           *
  * ==================================================================== */
 /* the actionable list for the current context — drives number-key selection */
-function overlayOpen(){ return ['index-ov','news-ov','conclude-ov','method-ov','flash']
+function overlayOpen(){ return ['index-ov','news-ov','conclude-ov','method-ov','moriarty-ov','flash']
   .some(id=>!$(id).classList.contains('hidden')); }
 function activeChoices(){
   if(!$('method-ov').classList.contains('hidden')) return [$('method-close')];
@@ -869,8 +888,10 @@ document.addEventListener('keydown',e=>{
   const gameOn=!$('game-screen').classList.contains('hidden');
   const flashOpen=!$('flash').classList.contains('hidden');
   const methodOpen=!$('method-ov').classList.contains('hidden');
-  /* transient tips: Enter / Space / Escape dismisses (unless it holds a real choice) */
-  if((flashOpen||methodOpen)&&!inField&&(e.key==='Enter'||e.key===' '||e.key==='Escape')){
+  const morOpen=!$('moriarty-ov').classList.contains('hidden');
+  /* transient tips & interludes: Enter / Space / Escape dismisses */
+  if((flashOpen||methodOpen||morOpen)&&!inField&&(e.key==='Enter'||e.key===' '||e.key==='Escape')){
+    if(morOpen){ e.preventDefault(); return $('moriarty-close').click(); }
     if(methodOpen){ e.preventDefault(); return closeMethod(); }
     const fov=$('flash'), hasChoice=fov.querySelector('button');
     if(!hasChoice && typeof fov.onclick==='function'){ e.preventDefault(); return fov.onclick(); }

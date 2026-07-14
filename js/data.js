@@ -31,6 +31,23 @@ const META = {
   moriartyThreshold:5,
 };
 
+/* MORIARTY'S COUNTER-INDEX, made visible. As your notoriety climbs across
+   cases, these cold interludes fire once each on returning to Baker Street —
+   the Napoleon of Crime, patiently deducing YOU, until The Final Problem.
+   `at` is the P.moriarty threshold; `loud` fires the harsher variant if you
+   got there mostly by confident-wrong Norburys. */
+const MORIARTY_BEATS = [
+  { at:1, title:'A Caller, No Card',
+    text:'Mrs. Hudson mentions, as she clears the tea, that a gentleman called while you were out — tall, stooped, grey, and oddly incurious about your health. He asked only what hours you kept, and left no card. You had not thought your hours were anyone’s business.' },
+  { at:2, title:'The Waiting Hansom',
+    text:'Twice this week the same four-wheeler has stood across from 221B with its blinds drawn and its driver in no hurry for a fare. Watson has noticed it too, and says nothing about it, which is very unlike him.' },
+  { at:3, title:'An Editor’s Corrections',
+    text:'A plain envelope, no stamp, slipped beneath the door in the small hours: a single sheet listing your recent cases in a neat column — each annotated in a small, precise hand. Corrections, in the margin. The notes of a man revising a manuscript he considers not yet finished.',
+    loud:'A plain envelope, no stamp: your recent cases listed in a neat column — and beside each confident blunder, a small tick of approval, in a precise hand. Your mistakes, it seems, are being collected with particular care.' },
+  { at:4, title:'You Are Being Deduced',
+    text:'There is no longer any doubt of it. Somewhere a patient, first-class mind has been assembling you across every case you ever closed — your habits, your hours, the exact turn of your reasoning. The tail is constant now. Watson has begun, without a word, to carry his old service revolver again.' },
+];
+
 /* Watson's asides — the humanity meter, surfaced as narration. Keyed by a
    coarse mood the engine derives from head/heart and the last verdict. */
 const WATSON_ASIDES = {

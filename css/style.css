@@ -503,6 +503,23 @@ kbd{font-family:var(--sans);font-size:.85em;background:#171b1c;border:1px solid 
 .flash-card.margin .fc-detail{font-family:var(--serif);font-style:italic;font-size:15.5px;line-height:1.65;color:#2b3550}
 .flash-card.margin .fc-pin{color:#8a6a2a;text-align:right}
 
+/* ---------------- the Moriarty interludes ---------------- */
+.moriarty-ov{position:absolute;inset:0;z-index:56;display:flex;align-items:center;justify-content:center;
+  padding:24px;background:rgba(4,5,7,.94);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:fadeIn .5s ease}
+.moriarty-card{width:min(540px,100%);max-height:92vh;overflow-y:auto;
+  background:linear-gradient(180deg,#0c0f13,#080a0d);border:1px solid #232a30;border-top:3px solid var(--crimson);
+  border-radius:12px;padding:28px clamp(20px,4vw,36px) 24px;box-shadow:0 30px 90px rgba(0,0,0,.85),inset 0 0 60px rgba(192,57,43,.05)}
+.mor-eyebrow{font-family:var(--sans);font-size:10.5px;letter-spacing:.3em;text-transform:uppercase;color:var(--cool);text-align:center}
+.mor-title{font-family:var(--serif);font-weight:700;font-size:clamp(23px,4.5vw,32px);text-align:center;
+  letter-spacing:.03em;margin:6px 0 4px;color:#d8dce2}
+.mor-title::after{content:'';display:block;width:46px;height:1px;margin:12px auto 0;
+  background:linear-gradient(90deg,transparent,var(--crimson),transparent)}
+.mor-text{font-size:15.5px;line-height:1.75;color:#b7bcc6;margin:18px 0 14px;font-style:italic;text-align:center}
+.mor-sig{font-family:var(--sans);font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--crimson-br);
+  text-align:center;margin-bottom:20px;opacity:.8}
+.moriarty-card .menu-btn{width:100%;border-color:#2a3138}
+.moriarty-card .menu-btn:hover{border-color:var(--crimson-br)}
+
 /* ---------------- responsive ---------------- */
 @media(max-width:640px){
   #hud{top:6px;right:6px;max-width:190px}

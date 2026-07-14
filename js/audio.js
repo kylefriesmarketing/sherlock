@@ -139,6 +139,14 @@ function paper(){ if(!ctx||muted) return;
   g.gain.linearRampToValueAtTime(.07,now+.03); g.gain.exponentialRampToValueAtTime(.0001,now+.5);
   src.connect(f); f.connect(g); g.connect(master); src.start(now); src.stop(now+.55); }
 
+/* the Moriarty interlude sting — a low descending figure under a metronome */
+function dread(){ if(!ctx||muted) return;
+  const r=CFG_root-12;
+  [0,-1,-3,-5].forEach((n,i)=>setTimeout(()=>bow(midiHz(38+n),1.5,.06),i*400));
+  for(let i=0;i<4;i++) setTimeout(()=>bell(midiHz(72),.028,.06,'square'),i*400);
+  bell(midiHz(CFG_root-24),.16,3.2,'sine');
+}
+
 /* the verdict cadence — the violin's answer */
 function verdict(kind, truth){
   if(!ctx||muted) return;
@@ -163,5 +171,5 @@ function verdict(kind, truth){
 }
 function toggleMute(){ muted=!muted; try{ localStorage.setItem('sherlock_muted',muted?'1':'0'); }catch(e){}
   if(master) master.gain.setTargetAtTime(muted?0:.5,ctx.currentTime,.2); return muted; }
-return { setScene, tick, thread, paper, verdict, toggleMute };
+return { setScene, tick, thread, paper, dread, verdict, toggleMute };
 })();
