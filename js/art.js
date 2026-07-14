@@ -203,6 +203,37 @@ sussex(r){ return G('sx',[[0,'#1a1c10'],[.45,'#2c3018'],[1,'#242812']])+rect(0,0
     return `<g transform="translate(${x},${y})"><circle cx="0" cy="0" r="2.4" fill="#2a2410"/><path d="M-4,-3 q4,-4 8,0 M-4,3 q4,4 8,0" stroke="#2a2410" stroke-width=".8" fill="none" opacity=".7"/></g>`;}).join('')
   +holmes(150,430,1.1,'#20240f')
   +frame(); },
+press(r){ return G('pr',[[0,'#14110c'],[.5,'#1f1910'],[1,'#131009']])+rect(0,0,W,H,'url(#pr)')
+  +hatch(0,0,W,H,20,20,INK,.2)
+  +rect(160,170,580,270,'#0d0b07')/* the press body */
+  +Array.from({length:4},(_,i)=>`<circle cx="${250+i*160}" cy="235" r="36" fill="#171b19" stroke="${MID}" stroke-width="3"/><circle cx="${250+i*160}" cy="235" r="12" fill="${INK}"/>`).join('')/* rollers */
+  +rect(220,300,470,18,'#2a2216')/* feed bar */
+  +Array.from({length:6},(_,i)=>rect(250+i*72,318,54,96,'#d9d2bf',.82)+rect(250+i*72,318,54,96,'none',1).replace('/>',` stroke="#8a8268" stroke-width="1"/>`)).join('')/* printed sheets */
+  +glow(450,140,42,AMBER,.6)
+  +figure(770,430,.9,INK)
+  +frame(); },
+telegraph(r){ return G('tg',[[0,'#101413'],[.5,'#181e1d'],[1,'#0e1211']])+rect(0,0,W,H,'url(#tg)')
+  +Array.from({length:8},(_,i)=>line(0,54+i*7,W,86+i*5,MID,1,.45)).join('')/* wires */
+  +line(0,120,W,150,INK,4,.7)
+  +rect(120,300,660,140,'#0e0c09')/* instrument bench */
+  +Array.from({length:5},(_,i)=>{const x=180+i*130;
+    return rect(x,300,86,54,'#171b19')+rect(x+30,286,26,16,INK)+`<circle cx="${x+43}" cy="330" r="9" fill="none" stroke="${AMBER2}" stroke-width="2"/>`;}).join('')/* telegraph keys */
+  +glow(640,220,30,AMBER,.5)
+  +figure(430,430,.9,INK)
+  +frame(); },
+bridge(r){ return G('bg',[[0,'#0a0e12'],[.5,'#10161c'],[1,'#0a0d10']])+rect(0,0,W,H,'url(#bg)')
+  +fog(r,250,180,'#2a3640',.5)
+  +rect(0,400,W,120,'#0a1014')/* the black water */
+  +path(`M0,404 Q150,326 300,404 Q450,326 600,404 Q750,326 900,404 L900,446 L0,446 Z`,'#0c0f12')/* arches */
+  +rect(0,378,W,14,INK)/* parapet */
+  +Array.from({length:18},(_,i)=>line(i*52,392,i*52,378,MID,2,.5)).join('')/* balusters */
+  +line(700,378,700,296,INK,6)+`<path d="M680,296 q20,-22 40,0 l-6,20 l-28,0 z" fill="${INK2}"/>`
+  +glow(700,300,34,AMBER,.75)+circ(700,300,10,'#f0d99a',.9)
+  +`<ellipse cx="700" cy="444" rx="7" ry="44" fill="${AMBER}" opacity=".22"/>`/* lamp reflection */
+  +figure(360,390,1,INK)
+  +holmes(150,440,.95,INK)
+  +hatch(0,404,W,120,80,16,INK,.3)
+  +frame(); },
 briony(r){ return G('br',[[0,'#12140f'],[.5,'#1c2016'],[1,'#12140d']])+rect(0,0,W,H,'url(#br)')
   +fog(r,300,160,'#37432f',.35)
   /* a snug villa, warm lit windows, a bell-pull recess implied by one bright pane */

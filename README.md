@@ -51,7 +51,7 @@ Norbury), and **honest-unsolved** (declining to accuse is sometimes the correct,
 
 ## The anthology
 
-Seven public-domain cases, escalating:
+Eight cases — seven adapted from canon, one wholly original — escalating:
 
 1. **A Study in Scarlet** — the tutorial. *You have been in Afghanistan, I perceive.*
 2. **The Speckled Band** — the locked-room showpiece.
@@ -59,9 +59,23 @@ Seven public-domain cases, escalating:
 4. **The Blue Carbuncle** — the Head/Heart showcase: the correct solve and the just outcome diverge.
 5. **A Scandal in Bohemia** — The Woman. The case you are meant to lose, and to admire the losing.
 6. **The Yellow Face** — the proof-of-thesis. Holmes is wrong; the truth is tender. *Norbury.*
-7. **The Final Problem** — the capstone, gated by Moriarty's counter-index. The detective becomes
+7. **The Ink Before Midnight** — *an original case.* A newspaper dated tomorrow prints three deaths
+   as a schedule — Carradine at nine, Holmes disgraced at half past ten, Watson dead at midnight.
+   Every deduction you draw **disrupts a prediction and rewrites its headline.** Five suspects are
+   each guilty of *something*; only one is the Editor. And the true solve is not Head vs. Heart but
+   the **Watson Chronicle** — what he prints: the whole truth, a merciful omission, or the life over
+   the proof. What you write becomes the final front page.
+8. **The Final Problem** — the capstone, gated by Moriarty's counter-index. The detective becomes
    the quarry. Survive Reichenbach with Watson whole and Head/Heart in balance, your own Norburys
    owned, and earn the secret ending: **★ The Beekeeper of Sussex.**
+
+Two signature systems live in *The Ink Before Midnight*:
+
+- **The Tomorrow Edition** — a Victorian broadsheet that reacts to being investigated. Its three
+  predicted headlines are struck through and reprinted the instant the deduction that prevents each
+  one lands on your Index. The mystery *fights back*.
+- **The Watson Chronicle** — you don't just solve; Watson decides what the world reads. The final
+  accusation forks on the manuscript, not on morality, and the ending is the headline he sets.
 
 Across runs, a **commonplace book** and Holmes's **monographs** accrete on the title screen, and
 Moriarty's counter-index fills until The Final Problem unlocks.

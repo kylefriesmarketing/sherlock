@@ -310,6 +310,57 @@ kbd{font-family:var(--sans);font-size:.85em;background:#171b1c;border:1px solid 
 .tr-arrow{font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--crimson-br);margin-bottom:4px}
 .tr-claim{font-family:var(--serif);font-style:italic;font-size:14px;line-height:1.5;color:#f3ecd8}
 
+/* ---------------- THE TOMORROW EDITION ---------------- */
+.bb-btn.news{border-color:rgba(233,227,210,.35)}
+.bb-btn.news:hover{border-color:var(--bone)}
+.bb-btn.news.allbroke{border-color:var(--good)}
+.bb-btn.news.allbroke .bb-n{color:var(--good)}
+.news-frame{position:relative;margin:auto;width:min(860px,100%);max-height:94vh;overflow-y:auto;
+  background:linear-gradient(180deg,#e7e0cb,#ddd4bb);color:#1a1712;
+  border:1px solid #b7ad90;border-radius:2px;padding:0;
+  box-shadow:0 30px 90px rgba(0,0,0,.75)}
+.news-frame .board-x{position:absolute;top:12px;right:12px;background:#2a2216;color:#e9dcc2;z-index:3}
+.news-body{padding:30px clamp(20px,5vw,54px) 34px}
+.news-plate{filter:none}
+.news-masthead{font-family:"Iowan Old Style",Georgia,"Times New Roman",serif;font-weight:800;
+  font-size:clamp(30px,6vw,52px);text-align:center;letter-spacing:.04em;line-height:1;
+  color:#12100b;text-shadow:0 1px 0 rgba(255,255,255,.4)}
+.news-sub{font-family:var(--sans);text-align:center;font-size:11px;letter-spacing:.24em;
+  text-transform:uppercase;color:#6a5f45;margin-top:8px}
+.news-rule{height:0;border-top:3px double #3a3120;margin:14px 0 16px}
+.news-banner{font-family:var(--sans);text-align:center;font-size:12px;letter-spacing:.06em;
+  color:#7a2018;font-style:italic;margin-bottom:20px}
+.news-banner.allbroke{color:#3a6a2a;font-weight:800;font-style:normal;letter-spacing:.14em;
+  text-transform:uppercase;border:2px solid #3a6a2a;padding:8px;border-radius:2px}
+.news-cols{display:grid;grid-template-columns:1fr;gap:0}
+.news-col{border-top:1px solid #b7ad90;padding:16px 0}
+.news-col:first-child{border-top:none}
+.news-time{font-family:var(--sans);font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:#8a2018;margin-bottom:6px}
+.news-head{font-family:"Iowan Old Style",Georgia,serif;font-weight:800;font-size:clamp(18px,2.6vw,23px);
+  line-height:1.18;color:#161309}
+.news-head.struck{text-decoration:line-through;text-decoration-color:#b03024;text-decoration-thickness:2px;
+  color:#8a8470;font-weight:600}
+.news-rewrite{font-family:"Iowan Old Style",Georgia,serif;font-weight:800;font-size:clamp(17px,2.4vw,21px);
+  line-height:1.2;color:#12100b;margin-top:8px;padding-left:12px;border-left:3px solid var(--crimson)}
+.news-standing{font-family:var(--sans);font-size:11px;font-style:italic;color:#9a3020;margin-top:8px;letter-spacing:.08em}
+.news-col.broken .news-time{color:#3a6a2a}
+.news-margin{margin-top:24px;padding-top:14px;border-top:1px solid #b7ad90;
+  font-family:"Iowan Old Style",Palatino,serif;font-style:italic;font-size:14.5px;color:#2b3a63;
+  text-align:right;transform:rotate(-.6deg)}
+/* the "new edition" flash */
+.flash-card.news-flash{background:linear-gradient(180deg,#e7e0cb,#d8cfb4);transform:rotate(-.5deg);max-width:460px}
+.news-flash .fc-tag{color:#8a2018;text-align:center}
+.news-flash-old{font-family:"Iowan Old Style",Georgia,serif;font-weight:800;font-size:16px;line-height:1.2;
+  text-align:center;color:#8a8470;text-decoration:line-through;text-decoration-color:#b03024;text-decoration-thickness:2px;margin:8px 0}
+.news-flash-arrow{font-family:var(--sans);font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:#8a2018;text-align:center;margin:4px 0}
+.news-flash-new{font-family:"Iowan Old Style",Georgia,serif;font-weight:800;font-size:18px;line-height:1.2;
+  text-align:center;color:#12100b;margin-bottom:6px}
+/* the printed headline that closes an Ink outcome (verdict prose) */
+.news-final{display:block;font-family:"Iowan Old Style",Georgia,serif;font-weight:800;
+  font-size:clamp(15px,2.4vw,19px);letter-spacing:.03em;line-height:1.25;text-transform:uppercase;
+  color:var(--bone);margin:14px auto;padding:12px 16px;max-width:560px;
+  border-top:3px double var(--bone-dim);border-bottom:3px double var(--bone-dim)}
+
 /* ---------------- CONCLUDE ---------------- */
 .conclude-frame{margin:auto;width:min(760px,100%);max-height:92vh;overflow-y:auto;
   background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--crimson);

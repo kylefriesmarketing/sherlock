@@ -14,6 +14,9 @@ const $=id=>document.getElementById(id);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const K_P='sherlock_persist', K_R='sherlock_run';
 const CASES=SL.cases, ORDER=SL.order;
+/* case order: load order, unless a case declares an explicit `seq` */
+ORDER.forEach((id,i)=>{ CASES[id]._seq=(CASES[id].seq!=null)?CASES[id].seq:i; });
+ORDER.sort((a,b)=>CASES[a]._seq-CASES[b]._seq);
 
 /* ---------------- persistence (meta) ---------------- */
 function defP(){ return {
@@ -245,6 +248,7 @@ function renderScene(fresh){
   $('text-panel').scrollTop=0;
   updateBottomBar();
   maybeEnnui(firstVisit, avail.length);
+  if(fresh && c.newspaper && S.scene===c.start && !S.newsIntro){ S.newsIntro=1; setTimeout(openNews,600); }
   saveRun();
 }
 
@@ -303,16 +307,53 @@ function updateBottomBar(){
   const nobs=noticedCount(), off=offerable().length;
   const ready=off>0;
   const c=CUR();
+  const np=c.newspaper;
+  let newsBtn='';
+  if(np){ const broken=np.predictions.filter(p=>S.index.inf[p.disruptedBy]).length, total=np.predictions.length;
+    newsBtn=`<button id="bb-news" class="bb-btn news${broken===total?' allbroke':''}">
+      <span class="bb-ic">📰</span> Tomorrow <span class="bb-n">${broken}/${total}</span></button>`; }
   bar.innerHTML=`
     <button id="bb-index" class="bb-btn${ready?' stir':''}">
       <span class="bb-ic">🧵</span> The Index <span class="bb-n">${nobs}</span>
       ${ready?`<span class="bb-badge">${off} to connect</span>`:''}</button>
+    ${newsBtn}
     <button id="bb-watson" class="bb-btn ghost"${S.watsonAsks>=2?' disabled':''}>
       <span class="bb-ic">✎</span> Ask Watson${S.watsonAsks>=2?' — enough':''}</button>
     <button id="bb-conclude" class="bb-btn conclude"><span class="bb-ic">⚖</span> Conclude</button>`;
   $('bb-index').onclick=openIndex;
   $('bb-conclude').onclick=openConclude;
   $('bb-watson').onclick=askWatson;
+  if($('bb-news')) $('bb-news').onclick=openNews;
+}
+
+/* ==================================================================== *
+ *  THE TOMORROW EDITION — a newspaper that reprints itself as you       *
+ *  disrupt its predictions. Each prediction is struck and rewritten     *
+ *  the moment its `disruptedBy` inference lands on the Index.           *
+ * ==================================================================== */
+function openNews(){ $('news-ov').classList.remove('hidden'); renderNews(); AUDIO.thread(); }
+function closeNews(){ $('news-ov').classList.add('hidden'); }
+function renderNews(){
+  const c=CUR(), np=c.newspaper; if(!np) return;
+  const broken=np.predictions.filter(p=>S.index.inf[p.disruptedBy]).length;
+  const all=broken===np.predictions.length;
+  let h=`<div class="news-plate">
+    <div class="news-masthead">${np.masthead}</div>
+    <div class="news-sub">${np.edition} &middot; ${np.date}</div>
+    <div class="news-rule"></div>`;
+  h+=all
+    ? `<div class="news-banner allbroke">${np.allBroken}</div>`
+    : `<div class="news-banner">${broken} of ${np.predictions.length} headlines prevented — the rest are still being set in type</div>`;
+  h+=`<div class="news-cols">`;
+  np.predictions.forEach(p=>{ const done=!!S.index.inf[p.disruptedBy];
+    h+=`<div class="news-col${done?' broken':''}">
+      <div class="news-time">${p.time}</div>
+      <div class="news-head${done?' struck':''}">${p.headline}</div>
+      ${done ? `<div class="news-rewrite">${p.disruptedHeadline}</div>`
+             : `<div class="news-standing">— not yet prevented —</div>`}
+    </div>`; });
+  h+=`</div><div class="news-margin">${np.margin}</div></div>`;
+  $('news-body').innerHTML=h;
 }
 
 /* ==================================================================== *
@@ -386,6 +427,22 @@ function acceptInference(id){
   renderBoard();
   setTimeout(()=>{ const k=$('board-knots').querySelector(`[data-inf="${id}"]`);
     if(k) k.classList.add('knot-new'); drawThreads(); },60);
+  maybeEditionChanged(id);
+}
+/* drawing a key thread can break one of the Tomorrow Edition's predictions */
+function maybeEditionChanged(infId){
+  const np=CUR().newspaper; if(!np) return;
+  const p=np.predictions.find(x=>x.disruptedBy===infId); if(!p) return;
+  const ov=$('flash'); ov.className='flash-ov';
+  ov.innerHTML=`<div class="flash-card news-flash">
+    <div class="fc-tag">stop the presses — a new edition</div>
+    <div class="news-flash-old">${p.headline}</div>
+    <div class="news-flash-arrow">↓ you have made this false ↓</div>
+    <div class="news-flash-new">${p.disruptedHeadline}</div>
+    <div class="fc-pin">one prediction prevented</div></div>`;
+  ov.onclick=()=>{ ov.className='flash-ov hidden'; ov.innerHTML='';
+    if(!$('news-ov').classList.contains('hidden')) renderNews(); };
+  AUDIO.tick();
 }
 
 /* place numbered knots at the centroid of their sources, then draw red
@@ -425,6 +482,7 @@ function drawThreads(){
   svg.innerHTML=paths+dots;
 }
 $('index-close').onclick=closeIndex;
+$('news-close').onclick=closeNews;
 window.addEventListener('resize',()=>{ if(!$('index-ov').classList.contains('hidden')) drawThreads(); });
 
 /* ==================================================================== *
@@ -712,6 +770,7 @@ document.addEventListener('keydown',e=>{
   const inField=e.target&&e.target.matches&&e.target.matches('input,select,textarea');
   if(e.key==='Escape'){
     if(!$('index-ov').classList.contains('hidden')) return closeIndex();
+    if(!$('news-ov').classList.contains('hidden')) return closeNews();
     if(!$('conclude-ov').classList.contains('hidden')) return $('conclude-ov').classList.add('hidden');
   }
   if(e.key==='m'&&!inField) return void AUDIO.toggleMute();
