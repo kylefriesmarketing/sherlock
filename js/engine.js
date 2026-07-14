@@ -87,6 +87,9 @@ function titleScreen(){
   }
   renderCaseList();
 }
+/* an illustrative plate for each case-card, reusing the scene stills */
+const PLATE={ study:'crimescene', speckled:'manor', league:'cellar', carbuncle:'alley',
+  bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
 function renderCaseList(){
   const box=$('case-list'); if(!box) return;
   let h='';
@@ -95,10 +98,14 @@ function renderCaseList(){
     const done=P.solved[id];
     const ov=P.outcomes[id];
     const badge = done ? `<span class="cl-done k-${ov?ov.kind:'solved-true'}">${ov?verdictLabel(ov.kind):'closed'}</span>` : '';
+    const pk=PLATE[id];
+    const plate = (pk && typeof IMAGES!=='undefined' && IMAGES.has(pk))
+      ? `<span class="cl-plate" style="background-image:url('${IMAGES.url(pk)}')"></span>` : '';
     h+=`<button class="case-card${c.meta?' meta':''}${done?' done':''}" data-case="${id}">
+        ${plate}<span class="cl-content">
         <span class="cl-year">${c.year}${c.meta?' · the capstone':''}</span>
         <span class="cl-title">${c.title}</span>
-        <span class="cl-brief">${c.epigraph}</span>${badge}</button>`;
+        <span class="cl-brief">${c.epigraph}</span>${badge}</span></button>`;
   });
   box.innerHTML=h;
   [...box.querySelectorAll('.case-card')].forEach(b=>b.onclick=()=>{
@@ -123,7 +130,15 @@ function startCase(id){
 function enterGame(fresh){
   show('game-screen');
   renderScene(fresh);
+  if(fresh && !localStorage.getItem('sherlock_onboarded')) showMethod(true);
 }
+/* ---- "The Method": first-run primer + a reopenable ? ---- */
+function showMethod(first){ $('method-ov').classList.remove('hidden'); $('method-ov').dataset.first=first?'1':''; }
+function closeMethod(){ const ov=$('method-ov');
+  if(ov.dataset.first) try{ localStorage.setItem('sherlock_onboarded','1'); }catch(e){}
+  ov.classList.add('hidden'); }
+$('method-close').onclick=closeMethod;
+$('help-btn').onclick=()=>showMethod(false);
 
 /* ==================================================================== *
  *  THE HUD — the instruments                                            *
@@ -249,6 +264,11 @@ function renderScene(fresh){
   updateBottomBar();
   maybeEnnui(firstVisit, avail.length);
   if(fresh && c.newspaper && S.scene===c.start && !S.newsIntro){ S.newsIntro=1; setTimeout(openNews,600); }
+  /* tutorial: nudge toward the Index the first moment a thread can be drawn */
+  if(c.tutorial && !S.flags.coach_connect && offerable().length>0 && $('method-ov').classList.contains('hidden')){
+    S.flags.coach_connect=1;
+    setTimeout(()=>coachTip('a first connection','Two of your clues fit together. Tap <b>🧵 The Index</b> below, then draw the red thread between them. Mind — some connections are false, and I shan’t warn you which.'),450);
+  }
   saveRun();
 }
 
@@ -331,7 +351,7 @@ function updateBottomBar(){
  *  disrupt its predictions. Each prediction is struck and rewritten     *
  *  the moment its `disruptedBy` inference lands on the Index.           *
  * ==================================================================== */
-function openNews(){ $('news-ov').classList.remove('hidden'); renderNews(); AUDIO.thread(); }
+function openNews(){ $('news-ov').classList.remove('hidden'); renderNews(); AUDIO.paper(); }
 function closeNews(){ $('news-ov').classList.add('hidden'); }
 function renderNews(){
   const c=CUR(), np=c.newspaper; if(!np) return;
@@ -428,6 +448,8 @@ function acceptInference(id){
   setTimeout(()=>{ const k=$('board-knots').querySelector(`[data-inf="${id}"]`);
     if(k) k.classList.add('knot-new'); drawThreads(); },60);
   maybeEditionChanged(id);
+  if(c.tutorial && !S.flags.coach_conclude && !c.newspaper){ S.flags.coach_conclude=1;
+    setTimeout(()=>coachTip('when the board is ready','A thread drawn. Build enough of them and the true accusation becomes thinkable — a weak board simply cannot see it. Then press <b>⚖ Conclude</b>. Be certain: naming the guilty cannot be undone.'),760); }
 }
 /* drawing a key thread can break one of the Tomorrow Edition's predictions */
 function maybeEditionChanged(infId){
@@ -524,6 +546,17 @@ function watsonNudge(){
       return `There is a thing on the ground we cannot reach ourselves. Send one of Wiggins’s boys — that is what they are for.`; }
   }
   return `You have more than you think. Read your own board again, slowly, as though a stranger had written it.`;
+}
+
+/* one-time coaching tips, tutorial case only (Watson teaches the loop) */
+function coachTip(tag, body){
+  const ov=$('flash'); ov.className='flash-ov';
+  ov.innerHTML=`<div class="flash-card watson coach">
+    <div class="fc-tag">Watson — ${tag}</div>
+    <div class="fc-detail">${body}</div>
+    <div class="fc-pin">tap to continue</div></div>`;
+  ov.onclick=()=>{ ov.className='flash-ov hidden'; ov.innerHTML=''; };
+  AUDIO.tick();
 }
 
 /* ==================================================================== *

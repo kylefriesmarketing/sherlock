@@ -130,6 +130,14 @@ function tick(){ if(!ctx||muted) return; pluck(midiHz(CFG_root+19+((Math.random(
    betray whether the inference is valid. That reckoning waits for the verdict. */
 function thread(){ if(!ctx||muted) return;
   [0,7].forEach((n,i)=>setTimeout(()=>pluck(midiHz(CFG_root+12+n),.07),i*90)); }
+/* a newspaper rustle — filtered noise, quick and papery */
+function paper(){ if(!ctx||muted) return;
+  const now=ctx.currentTime;
+  const src=ctx.createBufferSource(); src.buffer=noiseBuf();
+  const f=ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=1900;
+  const g=ctx.createGain(); g.gain.setValueAtTime(0,now);
+  g.gain.linearRampToValueAtTime(.07,now+.03); g.gain.exponentialRampToValueAtTime(.0001,now+.5);
+  src.connect(f); f.connect(g); g.connect(master); src.start(now); src.stop(now+.55); }
 
 /* the verdict cadence — the violin's answer */
 function verdict(kind, truth){
@@ -155,5 +163,5 @@ function verdict(kind, truth){
 }
 function toggleMute(){ muted=!muted; try{ localStorage.setItem('sherlock_muted',muted?'1':'0'); }catch(e){}
   if(master) master.gain.setTargetAtTime(muted?0:.5,ctx.currentTime,.2); return muted; }
-return { setScene, tick, thread, verdict, toggleMute };
+return { setScene, tick, thread, paper, verdict, toggleMute };
 })();

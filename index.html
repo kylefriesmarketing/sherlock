@@ -59,6 +59,7 @@
   <!-- GAME -->
   <div id="game-screen" class="screen hidden">
     <div id="scene-wrap"><div id="scene-art"></div></div>
+    <button id="help-btn" title="The Method — how to play" aria-label="How to play">?</button>
     <div id="hud"></div>
     <div id="story-layer">
       <div id="text-panel" aria-live="polite" role="region" aria-label="The scene">
@@ -119,6 +120,19 @@
       <div id="verdict-monos"></div>
       <div id="verdict-watson" class="verdict-watson"></div>
       <button id="btn-verdict-again" class="menu-btn">Close the Casebook</button>
+    </div>
+  </div>
+
+  <div id="method-ov" class="method-ov hidden">
+    <div class="method-card">
+      <div class="method-eyebrow">the science of deduction</div>
+      <h2 class="method-title">The Method</h2>
+      <div class="method-steps">
+        <div class="method-step"><span class="ms-n">1</span><div><b>Observe.</b> Walk each scene and <em>notice</em> the tells — a smear of clay, a bell-pull that rings nothing. You are Holmes's eyes; nothing counts until you have seen it.</div></div>
+        <div class="method-step"><span class="ms-n">2</span><div><b>Connect.</b> Open <b>🧵 The Index</b> and draw the red thread between clues. Some links are true and some are tempting lies — <em>the game will not tell you which.</em> A theory you never build, you can never accuse.</div></div>
+        <div class="method-step"><span class="ms-n">3</span><div><b>Conclude.</b> Name the guilty only when your board supports it. And when you are wrong — you will be — there is no retry. An innocent hangs, and Watson whispers one word: <em>Norbury.</em> Being wrong is a branch, not a wall. Walk it.</div></div>
+      </div>
+      <button id="method-close" class="menu-btn">The game is afoot</button>
     </div>
   </div>
 
