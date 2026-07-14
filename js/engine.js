@@ -89,7 +89,7 @@ function titleScreen(){
 }
 /* an illustrative plate for each case-card, reusing the scene stills */
 const PLATE={ study:'crimescene', speckled:'manor', league:'cellar', carbuncle:'alley',
-  bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
+  silverblaze:'station', bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
 function renderCaseList(){
   const box=$('case-list'); if(!box) return;
   let h='';

@@ -290,6 +290,14 @@ kbd{font-family:var(--sans);font-size:.85em;background:#171b1c;border:1px solid 
 .pin-card.tag-record .pc-tack{background:radial-gradient(circle at 35% 30%,#f0d08a,#c69a2a 60%,#7a5a10)}
 .pc-tag{font-family:var(--sans);font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#8a5a2a;margin-bottom:4px}
 .pin-card.tag-testimony .pc-tag{color:#2f6a86} .pin-card.tag-record .pc-tag{color:#96701a}
+/* negative evidence — the thing that was NOT there */
+.pin-card.tag-absence{background:linear-gradient(178deg,#e4e7ea,#d2d8dd)}
+.pin-card.tag-absence .pc-tack{background:radial-gradient(circle at 35% 30%,#cad5dd,#5a6b7a 60%,#28323a)}
+.pin-card.tag-absence .pc-tag{color:#48586a}
+.pin-card.tag-absence .pc-tag::before{content:'∅ '}
+.flash-card.tag-absence{background:linear-gradient(178deg,#e4e7ea,#d2d8dd)}
+.flash-card.tag-absence .fc-tag{color:#48586a}
+.flash-card.tag-absence .fc-tag::before{content:'∅ '}
 .pc-label{font-family:var(--sans);font-weight:800;font-size:13.5px;line-height:1.2;margin-bottom:5px;color:#191d22}
 .pc-detail{font-size:12px;line-height:1.5;color:#3a3f45}
 .board-empty{margin:auto;color:#e0d3b8;font-style:italic;font-size:15px;text-align:center;padding:40px;max-width:420px}

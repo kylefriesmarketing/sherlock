@@ -61,6 +61,7 @@ const COMMONPLACE = {
   goose_crop:    "On the concealment of small valuables — a fool hides a jewel where it must be found.",
   photo_hidden:  "On the instinct of the hunted — in a fire-alarm, all of us reach first for our one dear thing.",
   yellow_face:   "On the danger of the obvious — that a face at a window is a threat only to the fearful mind.",
+  dog_silent:    "On the evidence of absence — the dog that does not bark, the track that is never torn: what should have happened and did not is often the loudest witness of all.",
 };
 
 /* Monographs — the achievement layer, in Holmes's own titles. Earned by
@@ -94,6 +95,9 @@ const MONOGRAPHS = [
   { id:'m_second', title:'Upon Second Editions',
     note:'Return to a case you have already closed — and read what Watson wrote in the margin.',
     check:(ctx)=> ctx.isReplay },
+  { id:'m_negative', title:'Upon the Dog That Did Nothing',
+    note:'Solve a case on the strength of what did NOT happen.',
+    check:(ctx)=> ctx.caseId==='silverblaze' && ctx.truth },
 ];
 
 /* THE MARGINS — Watson revises his manuscript. On a REPLAY of a case you
@@ -133,6 +137,10 @@ const MARGINS = {
     wrong:'I have not been able to finish revising this one. He would not turn and face the hunt, and the counter-index closed about him. I keep the page, and the grief, exactly as they fell.',
     solved:'Reichenbach. I have written it as it happened and struck out nothing. The Napoleon of Crime was ended — and, in the margin, one line only: that some victories are worth their terrible price, and one is not.',
     unsolved:'He turned back down the path with me and let the reckoning go. “I wanted this more,” he said, and meant the two of us, walking down. It is the bravest page in the book.' },
+  silverblaze:{
+    wrong:'I have struck out the man I accused. The dog told the whole of it and I did not listen: it did not bark, because the hand on the halter was one it knew. No stranger crossed that yard. The trainer’s own scheme killed him.',
+    solved:'Silver Blaze ran and won, and Holmes let the county keep its hero. In the margin I have written only this: that the loudest witness that night was the dog that said nothing at all.',
+    unsolved:'We got the horse home and left the death an open question on the moor. Holmes would not swear past what he could prove — and no innocent hung for it, which he counted the whole of the win.' },
 };
 function marginFor(caseId, kind){ const m=MARGINS[caseId]; if(!m) return null;
   const k = kind==='wrong-arrest'?'wrong' : kind==='unsolved-honest'?'unsolved' : 'solved';

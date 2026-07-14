@@ -248,6 +248,30 @@ briony(r){ return G('br',[[0,'#12140f'],[.5,'#1c2016'],[1,'#12140d']])+rect(0,0,
   +circ(596,250,6,CRIM,.9)
   +holmes(140,440,1,INK)
   +frame(); },
+stables(r){ return G('sb',[[0,'#14110c'],[.5,'#1e1810'],[1,'#140f09']])+rect(0,0,W,H,'url(#sb)')
+  +hatch(0,0,W,H,20,22,INK,.2)
+  +rect(80,150,740,270,'#0e0c08')/* the stable range */
+  +Array.from({length:5},(_,i)=>{const x=120+i*140;
+    return rect(x,190,90,190,'#171b19')+rect(x,190,90,92,'#0a0c0b')/* dutch door, top open */
+      +line(x,284,x+90,284,MID,2,.7)+rect(x-6,180,102,12,INK);}).join('')
+  +glow(700,150,42,AMBER,.7)+line(700,118,700,168,INK,5)+circ(700,150,9,'#f0d99a',.85)
+  +path(`M118,402 l64,0 l-7,-28 l-50,0 z`,'#3a2c18',.85)/* hay */
+  +`<g transform="translate(610,356)"><path d="M-28,0 l0,-28 l28,-17 l28,17 l0,28 z" fill="#0c0e0d"/><path d="M-15,0 q15,-17 30,0 z" fill="${INK}"/></g>`/* kennel */
+  +circ(627,368,5,MID,.75)/* the quiet dog */
+  +frame(); },
+moor(r){ return G('mr',[[0,'#0e1114'],[.5,'#141a1c'],[1,'#0c1012']])+rect(0,0,W,H,'url(#mr)')
+  +fog(r,170,180,'#2b343a',.5)
+  +path(`M0,320 Q220,290 460,322 Q680,350 900,300 L900,${H} L0,${H} Z`,'#10140f')
+  +path(`M0,362 Q260,342 520,370 Q740,394 900,360 L900,${H} L0,${H} Z`,'#0c0f0a')
+  +path(`M700,300 l30,-40 l24,20 l20,-30 l26,50 z`,'#0a0d0a')/* distant tor */
+  +hatch(0,360,W,160,70,20,INK,.32)
+  +Array.from({length:6},(_,i)=>{const x=130+i*120+r()*28,y=384+r()*36;
+    return `<path d="M${x},${y} q-10,-14 0,-24 q10,10 0,24" fill="#182016" opacity=".9"/>`;}).join('')/* gorse */
+  +path(`M296,392 q-6,-30 14,-34 q18,-2 16,20 l-4,14 z`,'#241a10',.9)/* coat on the bush */
+  +circ(326,388,3,'#e8e0c8',.95)/* the knife glint */
+  +holmes(560,432,1,INK)
+  +fog(r,300,120,'#3a444a',.4)
+  +frame(); },
 };
 P.wrong=P.crimescene;
 function paint(container,key,seed){

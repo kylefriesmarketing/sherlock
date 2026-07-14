@@ -51,21 +51,24 @@ Norbury), and **honest-unsolved** (declining to accuse is sometimes the correct,
 
 ## The anthology
 
-Eight cases — seven adapted from canon, one wholly original — escalating:
+Nine cases — eight adapted from canon, one wholly original — escalating:
 
 1. **A Study in Scarlet** — the tutorial. *You have been in Afghanistan, I perceive.*
 2. **The Speckled Band** — the locked-room showpiece.
 3. **The Red-Headed League** — the obvious is the trap.
 4. **The Blue Carbuncle** — the Head/Heart showcase: the correct solve and the just outcome diverge.
-5. **A Scandal in Bohemia** — The Woman. The case you are meant to lose, and to admire the losing.
-6. **The Yellow Face** — the proof-of-thesis. Holmes is wrong; the truth is tender. *Norbury.*
-7. **The Ink Before Midnight** — *an original case.* A newspaper dated tomorrow prints three deaths
+5. **Silver Blaze** — *the dog that did nothing in the night-time.* Introduces **negative evidence**:
+   the clue is the bark that never came, the gallop-track never torn. The murderer, it turns out, is
+   no man at all.
+6. **A Scandal in Bohemia** — The Woman. The case you are meant to lose, and to admire the losing.
+7. **The Yellow Face** — the proof-of-thesis. Holmes is wrong; the truth is tender. *Norbury.*
+8. **The Ink Before Midnight** — *an original case.* A newspaper dated tomorrow prints three deaths
    as a schedule — Carradine at nine, Holmes disgraced at half past ten, Watson dead at midnight.
    Every deduction you draw **disrupts a prediction and rewrites its headline.** Five suspects are
    each guilty of *something*; only one is the Editor. And the true solve is not Head vs. Heart but
    the **Watson Chronicle** — what he prints: the whole truth, a merciful omission, or the life over
    the proof. What you write becomes the final front page.
-8. **The Final Problem** — the capstone, gated by Moriarty's counter-index. The detective becomes
+9. **The Final Problem** — the capstone, gated by Moriarty's counter-index. The detective becomes
    the quarry. Survive Reichenbach with Watson whole and Head/Heart in balance, your own Norburys
    owned, and earn the secret ending: **★ The Beekeeper of Sussex.**
 
