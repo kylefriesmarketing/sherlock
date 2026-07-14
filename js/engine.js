@@ -165,9 +165,10 @@ function paintHUD(){
   const c=CUR();
   const cer=certainty(), pct=Math.round(cer*100);
   const R=15, C=2*Math.PI*R, off=C*(1-cer);
-  /* head/heart marker: -6..+6 -> 0..100% */
+  /* head/heart marker: hh = head-heart; HEAD is the left end, so a headward
+     lean must sit LEFT (low %). */
   const hh=clamp(S.head+P.head - (S.heart+P.heart), -6,6);
-  const hhPos=((hh+6)/12)*100;
+  const hhPos=((6-hh)/12)*100;
   const enn=clamp(S.ennui,0,META.ennuiMax);
   const hhLabel = hh>2?'leaning to the Head (the puzzle)':hh<-2?'leaning to the Heart (the people)':'balanced between Head and Heart';
   let h=`<div class="hud-panel" role="group" aria-label="The instruments">
@@ -825,6 +826,77 @@ $('btn-verdict-index')&&($('btn-verdict-index').onclick=()=>{ /* review board po
  *  GALLERIES — endings, monographs, the commonplace book, Moriarty      *
  * ==================================================================== */
 $('gallery-close').onclick=titleScreen;
+$('btn-dossier').onclick=()=>{
+  const bal=P.head-P.heart;
+  let hhT,hhD;
+  if(bal>=4){ hhT='The Reasoning Machine'; hhD='Brilliant, correct, and cold. You solve for the puzzle and let the sympathetic guilty hang. Watson watches the needle, and writes less each week.'; }
+  else if(bal>=2){ hhT='The Cold Logician'; hhD='The puzzle over the person, more often than not — a fine detective, and a cooler friend.'; }
+  else if(bal<=-4){ hhT='The Good Doctor’s Friend'; hhD='Mercy first, and the clever villain is sometimes allowed to walk. Lesser at the puzzle; far greater at the life.'; }
+  else if(bal<=-2){ hhT='The Humane Detective'; hhD='The people over the puzzle. You would rather be kind than clever, on the days the two diverge.'; }
+  else { hhT='In Balance'; hhD='Head and heart held level — the rarest poise in the work, and the hardest to keep. This is the road to Sussex.'; }
+  const hhPos=((6-clamp(bal,-6,6))/12)*100;
+  const w=P.watson;
+  const wS = w>=8?['By the fire, always','He would follow you to a waterfall and back. The bond is whole.']
+    : w>=5?['Steadfast','He trusts your judgment under pressure, and still writes the warm parts of the tale.']
+    : w>=3?['Wary','Some things, of late, he has quietly stopped writing down.']
+    : ['Nearly gone','The prose has turned first-person and clinical. You are almost alone with the work now.'];
+  const solvedN=Object.keys(P.solved).length, total=ORDER.length;
+  const monoN=MONOGRAPHS.filter(m=>P.monographs[m.id]).length;
+  const cpN=Object.keys(P.commonplace||{}).length, cpTot=Object.keys(COMMONPLACE).length;
+  const marN=Object.keys(P.margins||{}).length;
+  const endN=Object.keys(P.endings||{}).length, metaN=Object.keys(P.metaEndings||{}).length;
+  const balOK=Math.abs(bal)<=2, watOK=w>=5, learnedOK=P.norburys>0;
+  const chk=b=>b?'<span class="dc-yes">✓</span>':'<span class="dc-no">◦</span>';
+  let h=`<div class="gallery-sub">A portrait of the detective you are becoming — drawn, like all your conclusions, from the evidence.</div>`;
+  h+=`<div class="dossier">
+    <div class="dos-block">
+      <div class="dos-label">the cast of your mind</div>
+      <div class="dos-hh-title">${hhT}</div>
+      <div class="hh-row big"><span class="hh-end head">HEAD</span><div class="hh-track"><div class="hh-mark" style="left:${hhPos}%"></div></div><span class="hh-end heart">HEART</span></div>
+      <div class="dos-desc">${hhD}</div>
+    </div>
+    <div class="dos-block">
+      <div class="dos-label">Watson</div>
+      <div class="dos-hh-title">${wS[0]}</div>
+      <div class="dos-bar"><div class="dos-bar-fill watson" style="width:${(w/10)*100}%"></div></div>
+      <div class="dos-desc">${wS[1]}</div>
+    </div>
+    <div class="dos-block">
+      <div class="dos-label">the humility &amp; the web</div>
+      <div class="dos-two">
+        <div><b class="dc-norb">${P.norburys}</b><span>Norbur${P.norburys===1?'y':'ies'} whispered</span></div>
+        <div><b class="dc-mor">${P.finalDone?'—':clamp(P.moriarty,0,5)+'/5'}</b><span>${P.finalDone?'the Fall is behind you':finalUnlocked()?'the Professor is ready':'the counter-index fills'}</span></div>
+      </div>
+      <div class="dos-desc">${P.norburys?'Every confident-and-wrong accusation you have owned. It is not shame — it is the mark of a mind learning its own limits.':'You have yet to be certain and wrong. It will come; when it does, own it, and whisper the word.'}</div>
+    </div>
+    <div class="dos-block">
+      <div class="dos-label">the record</div>
+      <div class="dos-grid">
+        <div class="dos-stat"><b>${solvedN}/${total}</b><span>cases closed</span></div>
+        <div class="dos-stat"><b>${monoN}/${MONOGRAPHS.length}</b><span>monographs</span></div>
+        <div class="dos-stat"><b>${cpN}/${cpTot}</b><span>ways of seeing</span></div>
+        <div class="dos-stat"><b>${marN}</b><span>margins read</span></div>
+        <div class="dos-stat"><b>${endN}</b><span>outcomes seen</span></div>
+        <div class="dos-stat"><b>${metaN}</b><span>lives lived</span></div>
+      </div>
+    </div>
+    <div class="dos-block sussex">
+      <div class="dos-label">the road to Sussex</div>`;
+  if(P.beeSeen){
+    h+=`<div class="dos-bee">★ You have found it — <b>The Beekeeper of Sussex</b>. The mind that could never rest, at rest.</div>`;
+  } else {
+    h+=`<div class="dos-desc">Survive The Final Problem in this balance, with Watson whole and your Norburys owned, and the great detective finds the only peace he was ever granted.</div>
+      <div class="dos-checklist">
+        <div>${chk(balOK)} Head and Heart in balance</div>
+        <div>${chk(watOK)} Watson whole beside you</div>
+        <div>${chk(learnedOK)} a Norbury owned, and learned from</div>
+        <div>${chk(P.finalDone)} the Reichenbach reckoning faced</div>
+      </div>`;
+  }
+  h+=`</div></div>`;
+  $('gallery-title').textContent='The Detective';
+  $('gallery-body').innerHTML=h; show('gallery');
+};
 $('btn-casebook').onclick=()=>{
   let h=`<div class="gallery-sub">The casebook — how each problem was closed, in the hand you closed it with, with Watson’s later note in the margin. A case can be reopened; a Norbury cannot be unsaid.</div>`;
   h+=`<div class="grid-cells wide">`+ORDER.filter(id=>!CASES[id].meta||finalUnlocked()).map(id=>{ const c=CASES[id];

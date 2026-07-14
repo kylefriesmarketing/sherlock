@@ -129,6 +129,35 @@ kbd{font-family:var(--sans);font-size:.85em;background:#171b1c;border:1px solid 
 .cp-entry{border-left:2px solid var(--amber-dk);padding:9px 0 9px 14px;margin-bottom:9px;font-style:italic;
   color:var(--bone);line-height:1.6;font-size:14px}
 .cp-entry.locked{border-left-color:var(--line);color:var(--faint)}
+/* the Dossier — the detective you are becoming */
+.dossier{display:flex;flex-direction:column;gap:14px}
+.dos-block{border:1px solid var(--line);border-radius:10px;padding:15px 17px;background:#0e1112}
+.dos-block.sussex{border-color:rgba(240,207,133,.35)}
+.dos-label{font-family:var(--sans);font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--fog);margin-bottom:8px}
+.dos-hh-title{font-family:var(--serif);font-weight:700;font-size:19px;color:var(--bone);margin-bottom:10px}
+.dos-desc{font-size:13.5px;line-height:1.6;color:var(--bone-dim);font-style:italic;margin-top:9px}
+.hh-row.big{margin:4px 0}
+.hh-row.big .hh-track{height:5px}
+.hh-row.big .hh-mark{width:13px;height:13px}
+.hh-row.big .hh-end{font-size:10px;letter-spacing:.12em}
+.dos-bar{height:8px;border-radius:5px;background:#1a1f20;border:1px solid var(--line);overflow:hidden;margin:2px 0 2px}
+.dos-bar-fill{height:100%;transition:width .5s}
+.dos-bar-fill.watson{background:linear-gradient(90deg,var(--fog-dk),var(--good))}
+.dos-two{display:flex;gap:14px}
+.dos-two>div{flex:1;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:8px 0}
+.dos-two b{font-family:var(--sans);font-weight:800;font-size:24px;line-height:1}
+.dos-two span{font-family:var(--sans);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--bone-dim)}
+.dc-norb{color:var(--crimson-br)} .dc-mor{color:var(--cool)}
+.dos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:9px}
+.dos-stat{display:flex;flex-direction:column;align-items:center;text-align:center;padding:10px 6px;border:1px solid var(--line);border-radius:7px;background:#0b0e0f}
+.dos-stat b{font-family:var(--sans);font-weight:800;font-size:19px;color:var(--bone)}
+.dos-stat span{font-family:var(--sans);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--bone-dim);margin-top:3px}
+.dos-checklist{display:flex;flex-direction:column;gap:7px;margin-top:12px;font-size:14px;color:var(--bone)}
+.dos-checklist>div{display:flex;align-items:center;gap:10px}
+.dc-yes{color:var(--good);font-weight:800;width:16px;text-align:center}
+.dc-no{color:var(--faint);width:16px;text-align:center}
+.dos-bee{font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.6;color:var(--amber-lt)}
+.dos-bee b{font-style:normal;font-weight:700}
 .moriarty-meter{margin-top:6px}
 .mm-track{height:8px;border-radius:5px;background:#0c0f10;border:1px solid var(--line);overflow:hidden}
 .mm-fill{height:100%;background:linear-gradient(90deg,var(--crimson-dk),var(--crimson));transition:width .6s}
