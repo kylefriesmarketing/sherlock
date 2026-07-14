@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ELEMENTARY — the science of deduction</title>
+<meta name="description" content="You are Sherlock Holmes. Observe, infer, name the guilty — and live with it when you are wrong. A branching playable book where being wrong is a branch, not a retry. Part of THE SHELF.">
+<meta name="theme-color" content="#0b0d0e">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="THE SHELF">
+<meta property="og:title" content="ELEMENTARY — the science of deduction">
+<meta property="og:description" content="You are Sherlock Holmes. Build the Index, draw the red thread, name the culprit. Being wrong is not a retry — it is an innocent in the dock and a word Watson whispers in your ear: Norbury.">
+<meta property="og:url" content="https://kylefriesmarketing.github.io/sherlock/">
+<meta property="og:image" content="https://kylefriesmarketing.github.io/sherlock/assets/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="ELEMENTARY — the science of deduction">
+<meta name="twitter:description" content="A Sherlock Holmes deduction game. Observe, infer, conclude. Wrong is a branch, not a wall.">
+<meta name="twitter:image" content="https://kylefriesmarketing.github.io/sherlock/assets/og.jpg">
+<link rel="stylesheet" href="css/style.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='13' cy='13' r='9' fill='none' stroke='%23d9a441' stroke-width='2'/%3E%3Cline x1='20' y1='20' x2='27' y2='27' stroke='%23d9a441' stroke-width='2.6' stroke-linecap='round'/%3E%3Ccircle cx='13' cy='13' r='3.4' fill='none' stroke='%23c0392b' stroke-width='1.5'/%3E%3C/svg%3E">
+</head>
+<body>
+<div id="app">
+
+  <!-- TITLE -->
+  <div id="title-screen" class="screen">
+    <div id="title-art"></div>
+    <div class="title-inner">
+      <div class="title-eyebrow">london · gaslight · the fog off the river</div>
+      <h1 class="game-title">ELEMENTARY</h1>
+      <div class="title-sub">the science of deduction</div>
+      <div id="title-song" class="title-song"></div>
+      <div class="title-menu">
+        <button id="btn-begin" class="menu-btn">The Game is Afoot</button>
+        <button id="btn-continue" class="menu-btn hidden">Resume the Case</button>
+      </div>
+      <div id="case-list" class="case-list"></div>
+      <div class="title-menu row">
+        <button id="btn-casebook" class="menu-btn small">The Casebook</button>
+        <button id="btn-monographs" class="menu-btn small">Monographs</button>
+        <button id="btn-commonplace" class="menu-btn small">Commonplace Book</button>
+      </div>
+      <div class="shelf-line">part of <a class="shelf-link" href="https://kylefriesmarketing.github.io/games/" target="_blank" rel="noopener">THE SHELF</a></div>
+      <div class="title-foot">after the Adventures of Sherlock Holmes &middot; press <kbd>~</kbd> for the pilot's lamp &middot; <kbd>m</kbd> mutes</div>
+    </div>
+  </div>
+
+  <!-- GALLERY (casebook / monographs / commonplace) -->
+  <div id="gallery" class="screen overlay hidden">
+    <div class="gallery-box">
+      <h2 id="gallery-title"></h2>
+      <div id="gallery-body"></div>
+      <button id="gallery-close" class="menu-btn small">Return</button>
+    </div>
+  </div>
+
+  <!-- GAME -->
+  <div id="game-screen" class="screen hidden">
+    <div id="scene-wrap"><div id="scene-art"></div></div>
+    <div id="hud"></div>
+    <div id="story-layer">
+      <div id="text-panel" aria-live="polite" role="region" aria-label="The scene">
+        <div id="region-name"></div>
+        <div id="node-title"></div>
+        <div id="node-text"></div>
+        <div id="choices" role="group" aria-label="What you do"></div>
+      </div>
+      <div id="bottom-bar"></div>
+    </div>
+
+    <!-- THE INDEX BOARD overlay -->
+    <div id="index-ov" class="board-ov hidden">
+      <div class="board-frame">
+        <div class="board-top">
+          <h2>The Index</h2>
+          <div id="board-cer" class="board-cer"></div>
+          <button id="index-close" class="board-x" aria-label="close">Back to the scene ✕</button>
+        </div>
+        <div id="board-inner" class="board-inner">
+          <svg id="board-threads" class="board-threads" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <div id="board-cards" class="board-cards"></div>
+          <div id="board-knots" class="board-knots"></div>
+        </div>
+        <div id="board-tray" class="board-tray"></div>
+      </div>
+    </div>
+
+    <!-- CONCLUDE overlay -->
+    <div id="conclude-ov" class="board-ov hidden">
+      <div class="conclude-frame">
+        <div id="conclude-body"></div>
+        <button id="conclude-close" class="menu-btn small">Not yet — back to the work</button>
+      </div>
+    </div>
+
+    <!-- flash card (observations / Watson / the needle) -->
+    <div id="flash" class="flash-ov hidden"></div>
+  </div>
+
+  <!-- VERDICT -->
+  <div id="verdict-screen" class="screen hidden">
+    <div id="verdict-art"></div>
+    <div class="verdict-inner">
+      <div id="verdict-kind"></div>
+      <h2 id="verdict-title"></h2>
+      <div id="verdict-truth" class="verdict-truth"></div>
+      <div id="verdict-text"></div>
+      <div id="verdict-verse"></div>
+      <div id="verdict-monos"></div>
+      <div id="verdict-watson" class="verdict-watson"></div>
+      <button id="btn-verdict-again" class="menu-btn">Close the Casebook</button>
+    </div>
+  </div>
+
+  <div id="debug-panel" class="hidden"></div>
+  <div id="grain" aria-hidden="true"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/data2.js"></script>
+<script src="js/data3.js"></script>
+<script src="js/images.js"></script>
+<script src="js/art.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/engine.js"></script>
+</body>
+</html>
