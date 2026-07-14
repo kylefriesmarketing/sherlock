@@ -86,8 +86,9 @@ Moriarty's counter-index fills until The Final Problem unlocks.
   The structure and clues are adapted from canon; **100% of the prose is original.** No canon text
   is reproduced.
 - **Art:** Sidney Paget's *Strand Magazine* steel-engraving idiom — cross-hatched ink, gaslight and
-  fog, one blood-crimson accent. Rendered procedurally in SVG (`art.js`); generated stills drop in
-  via `images.js` when present.
+  fog, one blood-crimson accent. Ships with **17 generated Paget-style engraving stills**
+  (`assets/scenes/`, made with Higgsfield `nano_banana_pro`), listed in `images.js`; the procedural
+  SVG in `art.js` (same idiom) is the automatic fallback for any scene without a still.
 - **Audio:** generative WebAudio, no files. A solo-violin motif hangs **unresolved** while a case is
   open and resolves — truly — only on a true solve (and *falsely*, a wrong cadence, on a
   confident-wrong close). Moriarty is a descending, mathematical minor figure under a metronome.
