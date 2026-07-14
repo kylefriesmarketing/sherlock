@@ -91,7 +91,52 @@ const MONOGRAPHS = [
   { id:'m_woman',  title:'Upon a Singular Adversary',
     note:'Meet The Woman, and lose to her well.',
     check:(ctx)=> ctx.caseId==='bohemia' && ctx.kind!=='wrong-arrest' },
+  { id:'m_second', title:'Upon Second Editions',
+    note:'Return to a case you have already closed — and read what Watson wrote in the margin.',
+    check:(ctx)=> ctx.isReplay },
 ];
+
+/* THE MARGINS — Watson revises his manuscript. On a REPLAY of a case you
+   have already closed, his later marginalia appears: after a Norbury, a
+   rueful nudge toward the truth you missed; after a true solve, a warm
+   callback; after declining, a reflection. Replay is meaningfully changed. */
+const MARGINS = {
+  study:{
+    wrong:'In revising this account I have struck out my confident line about the woman “Rachel.” There was no such woman. The answer waited at the kerb — in the tall man who drove the cab, and was never once feared.',
+    solved:'Holmes let me keep this one in scarlet. I have added only a note in the margin: that it was the ring, and never the wound, that was the heart of the matter.',
+    unsolved:'I left this account unfinished, and Holmes did not press me. Yet I confess I still think of the tall man and his four-wheeler, waiting in the small hours.' },
+  speckled:{
+    wrong:'I have crossed out my whole page on the gypsies at the wall; it shames me. The “speckled band” was never a troupe of travellers. It came down from above the bed, and the dying girl named exactly what she saw.',
+    solved:'Helen Stoner was married in the spring. In the margin I have written only this: that a room may be built, patiently, into a weapon — and that a man’s own device will turn upon the hand that set it.',
+    unsolved:'I got Helen away to Harrow and wrote no accusation. Watson the doctor is content; Watson the chronicler still hears a low whistle in the dark.' },
+  league:{
+    wrong:'My first draft called the Red-Headed League a harmless joke. I have inked heavily over it. Absurdity, Holmes reminds me, is the costume a clever crime wears — and the gold walked out beneath our feet while I laughed.',
+    solved:'John Clay went to the cells with excellent manners. Margin note: follow the incongruity, never the spectacle. The League was never the story — the empty shop was.',
+    unsolved:'We moved the gold and named no one; the tunnel opened on nothing. An honest half of a case — and Clay still at large in the fog.' },
+  carbuncle:{
+    wrong:'I have torn out the page where I let the plumber stand accused. Horner never touched the stone. The frame was hung upon him, and I mistook the costume for the man.',
+    solved:'Whether we gave Ryder to the law or let him run, the stone went home and Horner walked free either way. Margin note: the just answer and the legal one are not always the same door.',
+    unsolved:'We cleared the innocent and named no thief. Sometimes, Holmes says, that is the whole of the duty.' },
+  bohemia:{
+    wrong:'In revising, I have removed my ugly line about Miss Adler the blackmailer. She was nothing of the kind. We made a villain to order — and gave her every reason to become one.',
+    solved:'He will not let me call her anything clever. She is, simply, the woman — and I have learned to leave that sentence exactly as he first said it.',
+    unsolved:'He counselled the King to trust her word, and took no fee. “You liked her,” I said. He did not deny it, and I have not struck the observation out.' },
+  yellow:{
+    wrong:'This is the page I most wish to unwrite. I called a frightened child a blackmailer. Holmes bade me keep one word ready against his next certainty, and I keep it here, in the margin: Norbury.',
+    solved:'We left them together in the small warm room — a family that chose itself. He asked me for the word all the same, not because he failed, but so he never again mistakes cleverness for wisdom. Norbury.',
+    unsolved:'He declined to break what he could not prove, and sent Munro home to trust his wife. The restraint, he said, was the whole of the art that day.' },
+  ink:{
+    wrong:'The Tomorrow Edition printed a name, and I obliged it. In the margin I have set down the true one, too late to matter that night — Elias Rook, the Editor, who hid behind every honest secret but his own.',
+    solved:'We made the paper wrong. Rook argued to the last that it was never wrong, only unfinished. It is finished now — set down in an ink he could never have printed: the whole truth, told.',
+    unsolved:'Every predicted death failed to arrive, and I named no man; the edition ended its life as waste-paper. Rook is out there still, printing tomorrows — but not, that night, obeyed.' },
+  final:{
+    wrong:'I have not been able to finish revising this one. He would not turn and face the hunt, and the counter-index closed about him. I keep the page, and the grief, exactly as they fell.',
+    solved:'Reichenbach. I have written it as it happened and struck out nothing. The Napoleon of Crime was ended — and, in the margin, one line only: that some victories are worth their terrible price, and one is not.',
+    unsolved:'He turned back down the path with me and let the reckoning go. “I wanted this more,” he said, and meant the two of us, walking down. It is the bravest page in the book.' },
+};
+function marginFor(caseId, kind){ const m=MARGINS[caseId]; if(!m) return null;
+  const k = kind==='wrong-arrest'?'wrong' : kind==='unsolved-honest'?'unsolved' : 'solved';
+  return m[k]||m.solved||null; }
 
 /* Meta / run endings — the shape of a whole detective, tracked across the
    anthology. The Beekeeper is the secret, earned across runs. */

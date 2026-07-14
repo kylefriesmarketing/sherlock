@@ -22,7 +22,7 @@ ORDER.sort((a,b)=>CASES[a]._seq-CASES[b]._seq);
 function defP(){ return {
   runs:0, solved:{}, outcomes:{}, endings:{}, metaEndings:{},
   head:0, heart:0, watson:6, norburys:0, moriarty:0,
-  monographs:{}, commonplace:{}, lastCase:null, lastVerdict:null,
+  monographs:{}, commonplace:{}, margins:{}, lastCase:null, lastVerdict:null,
   finalDone:false, beeSeen:false }; }
 function loadP(){ try{ const p=JSON.parse(localStorage.getItem(K_P));
   if(p) return Object.assign(defP(),p); }catch(e){}
@@ -269,9 +269,15 @@ function renderScene(fresh){
   $('text-panel').scrollTop=0;
   updateBottomBar();
   maybeEnnui(firstVisit, avail.length);
-  if(fresh && c.newspaper && S.scene===c.start && !S.newsIntro){ S.newsIntro=1; setTimeout(openNews,600); }
-  /* tutorial: nudge toward the Index the first moment a thread can be drawn */
-  if(c.tutorial && !S.flags.coach_connect && offerable().length>0 && $('method-ov').classList.contains('hidden')){
+  if(fresh && c.newspaper && S.scene===c.start && !S.newsIntro && !P.solved[S.caseId]){ S.newsIntro=1; setTimeout(openNews,600); }
+  /* replay: Watson's later marginalia on a case you have already closed */
+  if(fresh && S.scene===c.start && P.solved[S.caseId] && !S.marginShown){
+    S.marginShown=1;
+    const note = (typeof marginFor==='function') ? marginFor(S.caseId,(P.outcomes[S.caseId]&&P.outcomes[S.caseId].kind)||'solved-true') : null;
+    if(note){ if(!P.margins) P.margins={}; P.margins[S.caseId]=1; saveP(); setTimeout(()=>showMargin(note),700); }
+  }
+  /* tutorial: nudge toward the Index the first moment a thread can be drawn (first play only) */
+  if(c.tutorial && !P.solved[S.caseId] && !S.flags.coach_connect && offerable().length>0 && $('method-ov').classList.contains('hidden')){
     S.flags.coach_connect=1;
     setTimeout(()=>coachTip('a first connection','Two of your clues fit together. Tap <b>🧵 The Index</b> below, then draw the red thread between them. Mind — some connections are false, and I shan’t warn you which.'),450);
   }
@@ -555,6 +561,17 @@ function watsonNudge(){
   return `You have more than you think. Read your own board again, slowly, as though a stranger had written it.`;
 }
 
+/* replay marginalia — Watson's revised manuscript, shown once per case entry */
+function showMargin(note){
+  const ov=$('flash'); ov.className='flash-ov';
+  ov.innerHTML=`<div class="flash-card margin">
+    <div class="fc-tag">from Watson’s revised manuscript</div>
+    <div class="fc-detail">${note}</div>
+    <div class="fc-pin">— a note in the margin</div></div>`;
+  ov.onclick=()=>{ ov.className='flash-ov hidden'; ov.innerHTML=''; };
+  if(typeof AUDIO.paper==='function') AUDIO.paper();
+}
+
 /* one-time coaching tips, tutorial case only (Watson teaches the loop) */
 function coachTip(tag, body){
   const ov=$('flash'); ov.className='flash-ov';
@@ -657,6 +674,7 @@ function verdict(outId, acc, tone){
   if(o.kind==='solved-cruel') P.moriarty+=1;
 
   /* record the case */
+  const wasSolved=!!P.solved[S.caseId];
   P.runs++;
   const eid=S.caseId+':'+outId;
   P.endings[eid]=(P.endings[eid]||0)+1;
@@ -666,7 +684,7 @@ function verdict(outId, acc, tone){
 
   /* monographs */
   const ctx={ caseId:S.caseId, truth:!!o.truth, kind:o.kind, tone,
-    firstNorbury,
+    firstNorbury, isReplay:wasSolved,
     watsonUnused:!S.watsonUsed,
     fullPhysical: allPhysicalNoticed(c),
     fullChains: allValidDrawn(c),
@@ -763,11 +781,12 @@ $('btn-verdict-index')&&($('btn-verdict-index').onclick=()=>{ /* review board po
  * ==================================================================== */
 $('gallery-close').onclick=titleScreen;
 $('btn-casebook').onclick=()=>{
-  let h=`<div class="gallery-sub">The casebook — how each problem was closed, in the hand you closed it with. A case can be reopened; a Norbury cannot be unsaid.</div>`;
-  h+=`<div class="grid-cells">`+ORDER.filter(id=>!CASES[id].meta||finalUnlocked()).map(id=>{ const c=CASES[id];
+  let h=`<div class="gallery-sub">The casebook — how each problem was closed, in the hand you closed it with, with Watson’s later note in the margin. A case can be reopened; a Norbury cannot be unsaid.</div>`;
+  h+=`<div class="grid-cells wide">`+ORDER.filter(id=>!CASES[id].meta||finalUnlocked()).map(id=>{ const c=CASES[id];
     const ov=P.outcomes[id];
     if(!ov) return `<div class="cell locked">— ${c.title} —<span class="ek">unopened</span></div>`;
-    return `<div class="cell k-${ov.kind}"><span class="ek">${verdictLabel(ov.kind)}</span>${c.title}</div>`;
+    const mg=(typeof marginFor==='function')?marginFor(id,ov.kind):null;
+    return `<div class="cell k-${ov.kind}"><span class="ek">${verdictLabel(ov.kind)}</span>${c.title}${mg?`<span class="cell-margin">“${mg}”</span>`:''}</div>`;
   }).join('')+`</div>`;
   /* meta endings */
   const me=Object.keys(META_ENDINGS);
