@@ -479,6 +479,8 @@ kbd{font-family:var(--sans);font-size:.85em;background:#171b1c;border:1px solid 
 .method-step b{color:var(--bone)}
 .ms-n{flex:none;width:30px;height:30px;border-radius:50%;background:#0e1112;border:1px solid var(--amber-dk);
   color:var(--amber);font-family:var(--sans);font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.method-keys{font-family:var(--sans);font-size:11px;letter-spacing:.03em;color:var(--faint);text-align:center;margin-bottom:16px;line-height:1.9}
+.method-keys kbd{margin:0 1px}
 .method-card .menu-btn{width:100%}
 .flash-card.coach{background:linear-gradient(178deg,#e6e8e2,#d3d8cd);transform:rotate(-.4deg)}
 .flash-card.coach .fc-tag{color:#2f6a86}

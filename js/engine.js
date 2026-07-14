@@ -133,10 +133,15 @@ function enterGame(fresh){
   if(fresh && !localStorage.getItem('sherlock_onboarded')) showMethod(true);
 }
 /* ---- "The Method": first-run primer + a reopenable ? ---- */
-function showMethod(first){ $('method-ov').classList.remove('hidden'); $('method-ov').dataset.first=first?'1':''; }
+/* modal focus management: move focus into the dialog, restore it on close */
+let lastFocus=null;
+function dlgOpen(sel){ lastFocus=document.activeElement;
+  const f=document.querySelector(sel); if(f){ f.setAttribute('tabindex','-1'); setTimeout(()=>{try{f.focus();}catch(e){}},30); } }
+function dlgRestore(){ if(lastFocus&&lastFocus.focus){ try{lastFocus.focus();}catch(e){} } lastFocus=null; }
+function showMethod(first){ $('method-ov').classList.remove('hidden'); $('method-ov').dataset.first=first?'1':''; dlgOpen('.method-card'); }
 function closeMethod(){ const ov=$('method-ov');
   if(ov.dataset.first) try{ localStorage.setItem('sherlock_onboarded','1'); }catch(e){}
-  ov.classList.add('hidden'); }
+  ov.classList.add('hidden'); dlgRestore(); }
 $('method-close').onclick=closeMethod;
 $('help-btn').onclick=()=>showMethod(false);
 
@@ -164,25 +169,26 @@ function paintHUD(){
   const hh=clamp(S.head+P.head - (S.heart+P.heart), -6,6);
   const hhPos=((hh+6)/12)*100;
   const enn=clamp(S.ennui,0,META.ennuiMax);
-  let h=`<div class="hud-panel">
+  const hhLabel = hh>2?'leaning to the Head (the puzzle)':hh<-2?'leaning to the Heart (the people)':'balanced between Head and Heart';
+  let h=`<div class="hud-panel" role="group" aria-label="The instruments">
     <div class="hud-case"><span class="hc-title">${c.title}</span><span class="hc-year">${c.year}</span></div>
     <div class="hud-sep"></div>
-    <div class="ring-wrap" title="CERTAINTY — how complete and coherent your Index is. Whether it is TRUE, you learn only when you conclude.">
-      <svg viewBox="0 0 40 40" class="cer-ring"><circle cx="20" cy="20" r="${R}" class="cr-bg"/>
+    <div class="ring-wrap" role="img" aria-label="Certainty ${pct} percent — how coherent your Index is; whether it is true, you learn only at the verdict" title="CERTAINTY — how complete and coherent your Index is. Whether it is TRUE, you learn only when you conclude.">
+      <svg viewBox="0 0 40 40" class="cer-ring" aria-hidden="true"><circle cx="20" cy="20" r="${R}" class="cr-bg"/>
       <circle cx="20" cy="20" r="${R}" class="cr-fg" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg>
       <div class="ring-num">${pct}<span>%</span></div><div class="ring-lab">certainty</div>
     </div>
     <div class="hud-sep"></div>
-    <div class="hh-row" title="HEAD ↔ HEART. Solving for the puzzle pulls one way; solving for the people, the other. Neither is virtue. Watson is watching which.">
+    <div class="hh-row" role="img" aria-label="Head and Heart: ${hhLabel}" title="HEAD ↔ HEART. Solving for the puzzle pulls one way; solving for the people, the other. Neither is virtue. Watson is watching which.">
       <span class="hh-end head">HEAD</span>
       <div class="hh-track"><div class="hh-mark" style="left:${hhPos}%"></div></div>
       <span class="hh-end heart">HEART</span>
     </div>
     <div class="hud-sep"></div>
     <div class="hud-foot">
-      <div class="seven" title="THE SEVEN PER CENT — boredom is the mind's true enemy. Idleness fills it. At the full it offers a ruinous relief.">
+      <div class="seven" role="img" aria-label="Ennui ${enn} of ${META.ennuiMax} — boredom fills with idleness" title="THE SEVEN PER CENT — boredom is the mind's true enemy. Idleness fills it. At the full it offers a ruinous relief.">
         <span class="sv-lab">ennui</span>${Array.from({length:META.ennuiMax},(_,i)=>`<i class="${i<enn?'on':''}${enn>=META.ennuiMax?' full':''}"></i>`).join('')}</div>
-      <div class="irr" title="THE IRREGULARS — Wiggins and the street-boys. Dispatch them to fetch what you cannot reach yourself. Limited.">
+      <div class="irr" role="img" aria-label="Irregulars remaining: ${Math.max(S.irregulars,0)}" title="THE IRREGULARS — Wiggins and the street-boys. Dispatch them to fetch what you cannot reach yourself. Limited.">
         <span class="sv-lab">irregulars</span>${Array.from({length:Math.max(S.irregulars,0)},()=>`<b>‡</b>`).join('')||'<em>spent</em>'}</div>
     </div>`;
   if(S.norburys||P.norburys) h+=`<div class="hud-sep"></div><div class="norbury-tally" title="Every confident-but-wrong accusation. Watson whispers the word; the count is the humility.">Norbury — <b>${S.norburys}</b> this case · ${P.norburys} in all</div>`;
@@ -351,8 +357,8 @@ function updateBottomBar(){
  *  disrupt its predictions. Each prediction is struck and rewritten     *
  *  the moment its `disruptedBy` inference lands on the Index.           *
  * ==================================================================== */
-function openNews(){ $('news-ov').classList.remove('hidden'); renderNews(); AUDIO.paper(); }
-function closeNews(){ $('news-ov').classList.add('hidden'); }
+function openNews(){ $('news-ov').classList.remove('hidden'); renderNews(); AUDIO.paper(); dlgOpen('.news-frame'); }
+function closeNews(){ $('news-ov').classList.add('hidden'); dlgRestore(); }
 function renderNews(){
   const c=CUR(), np=c.newspaper; if(!np) return;
   const broken=np.predictions.filter(p=>S.index.inf[p.disruptedBy]).length;
@@ -383,8 +389,9 @@ function openIndex(){
   const ov=$('index-ov'); ov.classList.remove('hidden');
   renderBoard();
   AUDIO.thread();
+  dlgOpen('.board-frame');
 }
-function closeIndex(){ $('index-ov').classList.add('hidden'); }
+function closeIndex(){ $('index-ov').classList.add('hidden'); dlgRestore(); }
 
 let BOARD_NUM={}; /* inf id -> legend number, stable within a render */
 function renderBoard(){
@@ -607,8 +614,10 @@ function openConclude(){
   $('conclude-body').innerHTML=h;
   [...ov.querySelectorAll('.ac-commit')].forEach(b=>b.onclick=()=>commit(b.dataset.acc,null));
   [...ov.querySelectorAll('.fork-btn')].forEach(b=>b.onclick=()=>commit(b.dataset.acc,+b.dataset.fork));
+  dlgOpen('.conclude-frame');
 }
-$('conclude-close').onclick=()=>$('conclude-ov').classList.add('hidden');
+function closeConclude(){ $('conclude-ov').classList.add('hidden'); dlgRestore(); }
+$('conclude-close').onclick=closeConclude;
 
 function commit(accId, forkIdx){
   const c=CUR(); const acc=c.accusations.find(a=>a.id===accId);
@@ -799,12 +808,45 @@ $('btn-commonplace').onclick=()=>{
 /* ==================================================================== *
  *  DEBUG (~) + MUTE (m) + keys                                           *
  * ==================================================================== */
+/* the actionable list for the current context — drives number-key selection */
+function overlayOpen(){ return ['index-ov','news-ov','conclude-ov','method-ov','flash']
+  .some(id=>!$(id).classList.contains('hidden')); }
+function activeChoices(){
+  if(!$('method-ov').classList.contains('hidden')) return [$('method-close')];
+  if(!$('flash').classList.contains('hidden')) return [...$('flash').querySelectorAll('button')];
+  if(!$('conclude-ov').classList.contains('hidden')) return [...$('conclude-body').querySelectorAll('.ac-commit,.fork-btn')];
+  if(!$('index-ov').classList.contains('hidden')) return [...$('board-tray').querySelectorAll('.tray-thread')];
+  if(!$('news-ov').classList.contains('hidden')) return [];
+  return [...$('choices').querySelectorAll('.observe,.choice:not([disabled])')];
+}
 document.addEventListener('keydown',e=>{
   const inField=e.target&&e.target.matches&&e.target.matches('input,select,textarea');
+  const gameOn=!$('game-screen').classList.contains('hidden');
+  const flashOpen=!$('flash').classList.contains('hidden');
+  const methodOpen=!$('method-ov').classList.contains('hidden');
+  /* transient tips: Enter / Space / Escape dismisses (unless it holds a real choice) */
+  if((flashOpen||methodOpen)&&!inField&&(e.key==='Enter'||e.key===' '||e.key==='Escape')){
+    if(methodOpen){ e.preventDefault(); return closeMethod(); }
+    const fov=$('flash'), hasChoice=fov.querySelector('button');
+    if(!hasChoice && typeof fov.onclick==='function'){ e.preventDefault(); return fov.onclick(); }
+  }
   if(e.key==='Escape'){
     if(!$('index-ov').classList.contains('hidden')) return closeIndex();
     if(!$('news-ov').classList.contains('hidden')) return closeNews();
-    if(!$('conclude-ov').classList.contains('hidden')) return $('conclude-ov').classList.add('hidden');
+    if(!$('conclude-ov').classList.contains('hidden')) return closeConclude();
+  }
+  /* number keys 1–9 activate the Nth choice in the active context */
+  if(!inField&&/^[1-9]$/.test(e.key)){
+    const btns=activeChoices(), b=btns[+e.key-1];
+    if(b){ e.preventDefault(); b.focus(); b.click(); return; }
+  }
+  /* letter shortcuts on the scene (no overlay up) */
+  if(gameOn&&!inField&&!overlayOpen()&&S){
+    if(e.key==='i'){ e.preventDefault(); return openIndex(); }
+    if(e.key==='n'&&CUR().newspaper){ e.preventDefault(); return openNews(); }
+    if(e.key==='w'&&S.watsonAsks<2){ e.preventDefault(); return askWatson(); }
+    if(e.key==='c'){ e.preventDefault(); return openConclude(); }
+    if(e.key==='?'){ e.preventDefault(); return showMethod(false); }
   }
   if(e.key==='m'&&!inField) return void AUDIO.toggleMute();
   if(e.key==='`'||e.key==='~'){

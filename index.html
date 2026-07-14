@@ -73,7 +73,7 @@
 
     <!-- THE INDEX BOARD overlay -->
     <div id="index-ov" class="board-ov hidden">
-      <div class="board-frame">
+      <div class="board-frame" role="dialog" aria-modal="true" aria-label="The Index — your case board of clues and connections">
         <div class="board-top">
           <h2>The Index</h2>
           <div id="board-cer" class="board-cer"></div>
@@ -82,7 +82,7 @@
         <div id="board-inner" class="board-inner">
           <svg id="board-threads" class="board-threads" preserveAspectRatio="none" aria-hidden="true"></svg>
           <div id="board-cards" class="board-cards"></div>
-          <div id="board-knots" class="board-knots"></div>
+          <div id="board-knots" class="board-knots" aria-hidden="true"></div>
         </div>
         <div id="board-tray" class="board-tray"></div>
       </div>
@@ -90,7 +90,7 @@
 
     <!-- THE TOMORROW EDITION overlay -->
     <div id="news-ov" class="board-ov hidden">
-      <div class="news-frame">
+      <div class="news-frame" role="dialog" aria-modal="true" aria-label="The Tomorrow Edition — tomorrow's newspaper">
         <button id="news-close" class="board-x" aria-label="close">Set the paper down ✕</button>
         <div id="news-body" class="news-body"></div>
       </div>
@@ -98,14 +98,14 @@
 
     <!-- CONCLUDE overlay -->
     <div id="conclude-ov" class="board-ov hidden">
-      <div class="conclude-frame">
+      <div class="conclude-frame" role="dialog" aria-modal="true" aria-label="Conclude the case — name the guilty">
         <div id="conclude-body"></div>
         <button id="conclude-close" class="menu-btn small">Not yet — back to the work</button>
       </div>
     </div>
 
     <!-- flash card (observations / Watson / the needle) -->
-    <div id="flash" class="flash-ov hidden"></div>
+    <div id="flash" class="flash-ov hidden" role="status" aria-live="assertive"></div>
   </div>
 
   <!-- VERDICT -->
@@ -124,7 +124,7 @@
   </div>
 
   <div id="method-ov" class="method-ov hidden">
-    <div class="method-card">
+    <div class="method-card" role="dialog" aria-modal="true" aria-label="The Method — how to play">
       <div class="method-eyebrow">the science of deduction</div>
       <h2 class="method-title">The Method</h2>
       <div class="method-steps">
@@ -132,6 +132,7 @@
         <div class="method-step"><span class="ms-n">2</span><div><b>Connect.</b> Open <b>🧵 The Index</b> and draw the red thread between clues. Some links are true and some are tempting lies — <em>the game will not tell you which.</em> A theory you never build, you can never accuse.</div></div>
         <div class="method-step"><span class="ms-n">3</span><div><b>Conclude.</b> Name the guilty only when your board supports it. And when you are wrong — you will be — there is no retry. An innocent hangs, and Watson whispers one word: <em>Norbury.</em> Being wrong is a branch, not a wall. Walk it.</div></div>
       </div>
+      <div class="method-keys"><kbd>1</kbd>–<kbd>9</kbd> choose &middot; <kbd>i</kbd> Index &middot; <kbd>c</kbd> Conclude &middot; <kbd>n</kbd> Tomorrow &middot; <kbd>w</kbd> Watson &middot; <kbd>?</kbd> this card &middot; <kbd>m</kbd> mute</div>
       <button id="method-close" class="menu-btn">The game is afoot</button>
     </div>
   </div>
