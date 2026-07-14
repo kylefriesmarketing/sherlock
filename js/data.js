@@ -79,6 +79,7 @@ const COMMONPLACE = {
   photo_hidden:  "On the instinct of the hunted — in a fire-alarm, all of us reach first for our one dear thing.",
   yellow_face:   "On the danger of the obvious — that a face at a window is a threat only to the fearful mind.",
   dog_silent:    "On the evidence of absence — the dog that does not bark, the track that is never torn: what should have happened and did not is often the loudest witness of all.",
+  strip_first:   "On secret writings — I have examined a hundred and sixty separate ciphers, and there is no cryptograph a human wit can devise that another human wit cannot resolve. What one man invents, another discovers.",
 };
 
 /* Monographs — the achievement layer, in Holmes's own titles. Earned by
@@ -118,6 +119,9 @@ const MONOGRAPHS = [
   { id:'m_cold', title:'Upon the Cold Method',
     note:'Solve a case truly with the training wheels off — no certainty, no Watson, no coaching.',
     check:(ctx)=> ctx.hard && ctx.truth },
+  { id:'m_cipher', title:'Upon the Cryptographs, and Their Solution',
+    note:'Break a secret writing, and solve the case behind it.',
+    check:(ctx)=> ctx.caseId==='dancing' && ctx.truth },
 ];
 
 /* THE MARGINS — Watson revises his manuscript. On a REPLAY of a case you
@@ -157,6 +161,10 @@ const MARGINS = {
     wrong:'I have not been able to finish revising this one. He would not turn and face the hunt, and the counter-index closed about him. I keep the page, and the grief, exactly as they fell.',
     solved:'Reichenbach. I have written it as it happened and struck out nothing. The Napoleon of Crime was ended — and, in the margin, one line only: that some victories are worth their terrible price, and one is not.',
     unsolved:'He turned back down the path with me and let the reckoning go. “I wanted this more,” he said, and meant the two of us, walking down. It is the bravest page in the book.' },
+  dancing:{
+    wrong:'I have struck out the page where I misread the figures. They were never a child’s game, nor the wife’s guilt — they were a hunt, spelled out plainly, and I was too slow or too unkind to read them. A good man died within reach of the answer.',
+    solved:'We answered Abe Slaney in his own capering hand, and he walked into it. In the margin I have drawn one small dancing man, and beside him written: what one man can invent, another can discover.',
+    unsolved:'We got Elsie away and left the last figures unread. Slaney, unanswered, tired and vanished. Holmes would not gamble the family on a half-broken code — and every soul at Riding Thorpe lived, which he counted enough.' },
   silverblaze:{
     wrong:'I have struck out the man I accused. The dog told the whole of it and I did not listen: it did not bark, because the hand on the halter was one it knew. No stranger crossed that yard. The trainer’s own scheme killed him.',
     solved:'Silver Blaze ran and won, and Holmes let the county keep its hero. In the margin I have written only this: that the loudest witness that night was the dog that said nothing at all.',

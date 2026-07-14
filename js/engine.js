@@ -100,7 +100,7 @@ function renderHardToggle(){
 $('hard-toggle')&&($('hard-toggle').onclick=()=>{ P.hard=!P.hard; saveP(); renderHardToggle(); AUDIO.tick&&AUDIO.tick(); });
 /* an illustrative plate for each case-card, reusing the scene stills */
 const PLATE={ study:'crimescene', speckled:'manor', league:'cellar', carbuncle:'alley',
-  silverblaze:'station', bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
+  silverblaze:'station', dancing:'records', bohemia:'briony', yellow:'cottage', ink:'press', final:'reichenbach' };
 function renderCaseList(){
   const box=$('case-list'); if(!box) return;
   let h='';
@@ -323,10 +323,11 @@ function notice(id, fromIrregular){
 }
 function flashObservation(o,fromIrregular,done){
   const ov=$('flash'); if(!ov){ done&&done(); return; }
+  const glyphs = (o.glyphs && typeof ART!=='undefined' && ART.dancingMen) ? `<div class="cipher-strip">${ART.dancingMen(o.glyphs)}</div>` : '';
   ov.className='flash-ov'; ov.innerHTML=
     `<div class="flash-card tag-${o.tag}">
       <div class="fc-tag">${fromIrregular?'the Irregulars bring —':o.tag}</div>
-      <div class="fc-label">${o.label}</div>
+      <div class="fc-label">${o.label}</div>${glyphs}
       <div class="fc-detail">${o.detail}</div>
       <div class="fc-pin">pinned to the Index ↴</div>
     </div>`;
@@ -422,10 +423,11 @@ function renderBoard(){
   /* observation cards, in the order noticed (stable) */
   const ids=allObsIds(c).filter(id=>S.index.obs[id]);
   board.innerHTML=ids.map((id,i)=>{ const o=obsDef(id);
+    const glyphs=(o.glyphs && ART.dancingMen)?`<div class="cipher-strip small">${ART.dancingMen(o.glyphs)}</div>`:'';
     return `<div class="pin-card tag-${o.tag}" data-obs="${id}">
       <span class="pc-tack"></span>
       <div class="pc-tag">${o.tag}</div>
-      <div class="pc-label">${o.label}</div>
+      <div class="pc-label">${o.label}</div>${glyphs}
       <div class="pc-detail">${o.detail}</div>
     </div>`; }).join('') || `<div class="board-empty">The board is bare. Go and look — noticing is the whole of the art.</div>`;
 
@@ -724,7 +726,8 @@ function verdict(outId, acc, tone){
     : (o.kind==='unsolved-honest'
         ? `<span class="tr-honest">Left open, and honest.</span> No name you could not prove.`
         : `<span class="tr-wrong">✗ You were wrong — and certain.</span> That is the worst way to be wrong.`);
-  $('verdict-text').innerHTML=fmt(o.text);
+  $('verdict-text').innerHTML=fmt(o.text).replace(/\{DM:([^}]+)\}/g,
+    (m,s)=> (ART.dancingMen?`<span class="dm-inline">${ART.dancingMen(s,'#e9e3d2')}</span>`:s));
   $('verdict-verse').textContent=o.verse||'';
   const md=$('verdict-monos');
   md.innerHTML=newMonos.map(m=>`<span class="mono-chip" title="${m.note.replace(/"/g,'&quot;')}">✦ ${m.title}</span>`).join('');

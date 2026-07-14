@@ -463,6 +463,17 @@ kbd{font-family:var(--sans);font-size:.85em;background:#171b1c;border:1px solid 
 .fc-label{font-family:var(--sans);font-weight:800;font-size:18px;line-height:1.2;margin-bottom:8px;color:#191d22}
 .fc-detail{font-size:14.5px;line-height:1.65;color:#2f343a}
 .fc-pin{font-family:var(--sans);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#a06a2a;margin-top:12px}
+/* THE DANCING MEN — cipher glyph strips */
+.cipher-strip{margin:8px 0 4px;padding:7px 2px 5px;border-top:1px solid rgba(140,110,60,.35);border-bottom:1px solid rgba(140,110,60,.35);
+  overflow-x:auto;overflow-y:hidden}
+.cipher-strip .dm-svg{display:block;height:34px;width:auto;min-width:100%}
+.cipher-strip.small{margin:6px 0 3px;padding:4px 2px}
+.cipher-strip.small .dm-svg{height:24px}
+.pin-card .cipher-strip{border-color:rgba(120,95,55,.4)}
+.dm-inline{display:inline-block;vertical-align:middle;margin:0 2px;max-width:100%;overflow-x:auto}
+.dm-inline .dm-svg{display:inline-block;height:30px;width:auto}
+#verdict-text .dm-inline{display:block;margin:12px auto;text-align:center}
+#verdict-text .dm-inline .dm-svg{height:34px;margin:0 auto}
 .flash-card.watson{background:linear-gradient(178deg,#e6e8e2,#d3d8cd);transform:rotate(.6deg)}
 .flash-card.watson .fc-detail{font-style:italic;font-size:16px;color:#252a26}
 .flash-card.needle{background:linear-gradient(178deg,#1a1d20,#0e1113);color:#d8d2c2;transform:rotate(0)}

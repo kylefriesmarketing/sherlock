@@ -51,7 +51,7 @@ Norbury), and **honest-unsolved** (declining to accuse is sometimes the correct,
 
 ## The anthology
 
-Nine cases — eight adapted from canon, one wholly original — escalating:
+Ten cases — nine adapted from canon, one wholly original — escalating:
 
 1. **A Study in Scarlet** — the tutorial. *You have been in Afghanistan, I perceive.*
 2. **The Speckled Band** — the locked-room showpiece.
@@ -68,7 +68,11 @@ Nine cases — eight adapted from canon, one wholly original — escalating:
    each guilty of *something*; only one is the Editor. And the true solve is not Head vs. Heart but
    the **Watson Chronicle** — what he prints: the whole truth, a merciful omission, or the life over
    the proof. What you write becomes the final front page.
-9. **The Final Problem** — the capstone, gated by Moriarty's counter-index. The detective becomes
+9. **The Dancing Men** — the cipher case. Rows of little capering stick-figures — rendered as an
+   actual substitution cipher — appear about a manor and terrify an American wife. **Reading them is
+   the deduction**: the cheap trap is to call them a child's scrawl; the truth is a hunter from
+   Chicago writing in a code only he and she can read. Answer him in his own hand.
+10. **The Final Problem** — the capstone, gated by Moriarty's counter-index. The detective becomes
    the quarry. Survive Reichenbach with Watson whole and Head/Heart in balance, your own Norburys
    owned, and earn the secret ending: **★ The Beekeeper of Sussex.**
 

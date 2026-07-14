@@ -279,5 +279,32 @@ function paint(container,key,seed){
   const fn=P[key]||P.bakerst;
   container.innerHTML=`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${fn.call(P,r)}</svg>`;
 }
-return { paint };
+
+/* THE DANCING MEN — render a string as Doyle's little capering cipher-figures.
+   Each letter is a deterministic stick-man (same letter → same figure); the
+   last figure of each word carries a small flag, marking the word-break. */
+function dancingMen(text, ink){
+  ink=ink||'#12100c';
+  const words=String(text).toUpperCase().split(/\s+/).filter(Boolean);
+  const chars=[]; words.forEach(w=>{ for(let i=0;i<w.length;i++){ const ch=w[i];
+    if(ch>='A'&&ch<='Z') chars.push({n:ch.charCodeAt(0)-65, flag:i===w.length-1}); } });
+  const FW=20, PAD=10; let cx=PAD, body='';
+  const L=(x,y,len,deg)=>{ const r=deg*Math.PI/180, x2=x+Math.cos(r)*len, y2=y+Math.sin(r)*len;
+    return `<line x1="${x.toFixed(1)}" y1="${y.toFixed(1)}" x2="${x2.toFixed(1)}" y2="${y2.toFixed(1)}" stroke="${ink}" stroke-width="1.5" stroke-linecap="round"/>`; };
+  chars.forEach(c=>{ const n=c.n, x=cx, hy=7, sh=13, hip=25;
+    const v=(k)=>(((n*5+k*7)%9)-4)*9;            /* -36..+36 per-limb variation */
+    const solid=n%2===0;
+    body+= solid ? `<circle cx="${x}" cy="${hy}" r="3.2" fill="${ink}"/>`
+                 : `<circle cx="${x}" cy="${hy}" r="3.2" fill="none" stroke="${ink}" stroke-width="1.3"/>`;
+    body+=`<line x1="${x}" y1="${hy+3.2}" x2="${x}" y2="${hip}" stroke="${ink}" stroke-width="1.6"/>`;/* spine */
+    body+=L(x,sh,9,215+v(1))+L(x,sh,9,325+v(2));   /* arms, up-and-out */
+    body+=L(x,hip,11,110+v(3))+L(x,hip,11,70+v(4)); /* legs, spread */
+    if(c.flag){ const r=(325+v(2))*Math.PI/180, hx=x+Math.cos(r)*9, hyy=sh+Math.sin(r)*9;
+      body+=`<path d="M${hx.toFixed(1)},${hyy.toFixed(1)} l6,-2.5 l-6,-2.5 z" fill="#c0392b"/>`; }
+    cx+=FW;
+  });
+  const w=Math.max(cx-FW+PAD*2,PAD*2+6);
+  return `<svg class="dm-svg" viewBox="0 0 ${w} 40" preserveAspectRatio="xMinYMid meet" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">${body}</svg>`;
+}
+return { paint, dancingMen };
 })();
